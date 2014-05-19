@@ -13,14 +13,14 @@ class CreateEmployersTable extends Migration {
 	public function up()
 	{
 		Schema::create('employers', function($table)
-    {
-		  $table->increments('id');
-      $table->string('name')>unique();
-      $table->string('industry')->index();
-      $table->text('description');
-      $table->integer('users_id')->unsigned();
-      $table->timestamps();
-    });
+        {
+            $table->increments('id');
+            $table->string('name')->unique();
+            $table->string('industry')->index();
+            $table->text('description');
+            $table->integer('user_id')->index();
+            $table->timestamps();
+        });
 	}
 
 	/**
