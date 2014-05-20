@@ -15,3 +15,12 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+Route::post('user/login', array('as' => 'user.login', 'uses' => 'UserController@login'));
+Route::get('user/logout', array('as' => 'user.logout', 'uses' => 'UserController@logout'));
+Route::resource('user', 'UserController');
+
+Route::get('job/result', array('as' => 'job.result', 'uses' => 'JobController@result'));
+Route::resource('job', 'JobController');
+
+Route::resource('employer', 'EmployerController');

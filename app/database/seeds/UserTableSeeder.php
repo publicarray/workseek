@@ -4,21 +4,21 @@ class UserTableSeeder extends Seeder { public function run()
 
     // creates sample user accounts
     {
-        $product = new User;
-        $product->username = 'seeker';
-        $product->password = Hash::make('helloworld');
-        $product->save();
-        $product = new User;
-        $product->username = 'guest';
-        $product->password = Hash::make('helloworld');
-        $product->save();
-        $product = new User;
-        $product->username = 'jobs';
-        $product->password = Hash::make('laravel');
-        $product->save();
-        $product = new User;
-        $product->username = 'ian';
-        $product->password = Hash::make('laravel');
-        $product->save();
+        $user = new User;
+        $user->username = 'seeker';
+        $user->password = Hash::make('helloworld');
+        $user->save();
+        $user = new User;
+        $user->username = 'guest';
+        $user->password = Hash::make('helloworld');
+        $user->save();
+        $user = new User;
+        $user->username = 'jobs';
+        $user->password = Hash::make('laravel');
+        $user->save();
+        $user = new User;
+        $user->username = 'ian';
+        $user->password = Hash::make('laravel');
+        $user->save();
     }
 }
