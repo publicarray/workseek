@@ -8,28 +8,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/cosmo/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300">
-    <style>
-    .splash {
-        height: 30em;
-        padding-top: 14em;
-        margin-bottom: 2em;
-        background-image: url("splash.jpg");
-        background-size: cover;
-        color: #fff;
-        text-align: center;
-    }
-    h1, h2, h3, h4, .btn{
-        font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 300;
-    }
-    p {
-        margin-bottom: 2em;
-        line-height: 1.6em;
-    }
-    footer{
-        margin-top: 4em;
-    }
-    </style>
+    {{HTML::style('style.css')}}
 </head>
 
 <body>
