@@ -1,6 +1,6 @@
 ## Laravel PHP Framework
 
-[Codeship status] (https://www.codeship.io/projects/e5e9f9a0-c3c5-0131-d11c-1e827f842da7/status)
+[![Codeship status](https://www.codeship.io/projects/e5e9f9a0-c3c5-0131-d11c-1e827f842da7/status)]
 
 [![Latest Stable Version](https://poser.pugx.org/laravel/framework/version.png)](https://packagist.org/packages/laravel/framework) [![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.png)](https://packagist.org/packages/laravel/framework) [![Build Status](https://travis-ci.org/laravel/framework.png)](https://travis-ci.org/laravel/framework) [![License](https://poser.pugx.org/laravel/framework/license.png)](https://packagist.org/packages/laravel/framework)
 
