@@ -21,3 +21,4 @@ class ExampleTest extends TestCase {
         $response6 = $this->call('GET', 'user/create');
         $response7 = $this->call('GET', 'user');
 	}
+}
