@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('title')
-Search Results for: '{{{$query or ''}}}' 
+Search Results for: '{{{$query or ''}}}'
 @stop
 
 @section('header')
@@ -36,7 +36,7 @@ Search Results for: '{{{$query or ''}}}'
                 <td>{{{$job->city}}}</td>
                 <td>${{{$job->salary}}}</td>
                 <td>{{{$job->industry}}}</td>
-                
+
             </tr>
             @endforeach
         </tbody>

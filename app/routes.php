@@ -11,10 +11,7 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+Route::get('/', array('as'=>'home', 'uses'=> 'JobController@index'));
 
 Route::post('user/login', array('as' => 'user.login', 'uses' => 'UserController@login'));
 Route::get('user/logout', array('as' => 'user.logout', 'uses' => 'UserController@logout'));

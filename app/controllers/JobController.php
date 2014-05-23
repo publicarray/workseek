@@ -36,7 +36,7 @@ class JobController extends \BaseController {
 		$job->title = $input['name'];
         $job->city = $input['city'];
         $job->salary = $input['salary'];
-        $job->description = $input['description'];	
+        $job->description = $input['description'];
         $job->employer_id = $input['employer_id'];
         $job->save();
 
