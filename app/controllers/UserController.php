@@ -34,15 +34,31 @@ class UserController extends \BaseController {
 		$input = Input::all();
         $v = Validator::make($input, User::$rules);
 
-        if ($v->passes()){
+        if ($v->passes())
+        {
             $password = $input['password'];
+            $username = $input['username'];
+            $type = $input['type'];
 
             $user = new User;
-            $user->username = $input['username'];
+            $user->username = $username;
             $user->password = Hash::make($password);
             $user->remember_token = "default";
             $user->save();
-            return Redirect::route('user.index');
+
+            if($type=='user')
+            {
+                return Redirect::route('user.index');
+            }
+            elseif($type=='employer'){
+
+                $employer = new Employer;
+                $employer->$input['name'];
+                $employer->$input['industry'];
+                $employer->$input['description'];
+                $employer->$user->id; //lastInsertId();
+                return Redirect::route('user.index');
+            }
         }else{
             // Show validation errors
             return View::make('user.create')->withErrors($v);
@@ -114,8 +130,8 @@ class UserController extends \BaseController {
 	public function login()
 	{
 		$input = Input::all();
-        $username = $input['Username'];
-        $password = $input['Password'];
+        $username = $input['username'];
+        $password = $input['password'];
         // $hashed = Hash::make($password);
 
         $validator = Validator::make(
@@ -132,7 +148,7 @@ class UserController extends \BaseController {
         if ($validator->passes() && Auth::attempt(compact('username', 'password'))){
             return Redirect::to(URL::previous());
         }else{
-            return Redirect::to(URL::previous())->with('message', 'Invalid username or password.')->withErrors($validator);
+            return Redirect::to(URL::previous())->with('message', 'Invalid username or password.')->withErrors($validator)->withInput();
         }
 	}
 
