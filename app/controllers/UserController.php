@@ -61,7 +61,7 @@ class UserController extends \BaseController {
             }
         }else{
             // Show validation errors
-            return View::make('user.create')->withErrors($v);
+            return Redirect::route('user.create')->withErrors($v)->withInput();
         }
 	}
 
