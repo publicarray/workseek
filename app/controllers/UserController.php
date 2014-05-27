@@ -9,7 +9,7 @@ class UserController extends \BaseController {
 	 */
 	public function index()
 	{
-		return View::make('user.index');
+        //
 	}
 
 
@@ -20,7 +20,7 @@ class UserController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('user.create');
+        //
 	}
 
 
@@ -31,39 +31,8 @@ class UserController extends \BaseController {
 	 */
 	public function store()
 	{
-		$input = Input::all();
-        $v = Validator::make($input, User::$rules);
-
-        if ($v->passes())
-        {
-            $password = $input['password'];
-            $username = $input['username'];
-            $type = $input['type'];
-
-            $user = new User;
-            $user->username = $username;
-            $user->password = Hash::make($password);
-            $user->remember_token = "default";
-            $user->save();
-
-            if($type=='user')
-            {
-                return Redirect::route('user.index');
-            }
-            elseif($type=='employer'){
-
-                $employer = new Employer;
-                $employer->$input['name'];
-                $employer->$input['industry'];
-                $employer->$input['description'];
-                $employer->$user->id; //lastInsertId();
-                return Redirect::route('user.index');
-            }
-        }else{
-            // Show validation errors
-            return Redirect::route('user.create')->withErrors($v)->withInput();
-        }
-	}
+		//
+    }
 
 
 	/**
@@ -86,11 +55,13 @@ class UserController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		if (Auth::check())
-        {
-            return View::make('job.edit');
+		if(Auth::check()){
+            $user = Product::find($id);
+            return View::make('user.edit', compact('user'));
+        }else{
+            return Redirect::route('job.index');
         }
-	}
+    }
 
 
 	/**
@@ -103,8 +74,31 @@ class UserController extends \BaseController {
 	{
 		if (Auth::check())
         {
+            $user = User::find($id);
+            $input = Input::all();
+            $v = Validator::make($input, User::$rules);
+
+            if ($v->passes())
+            {
+                $password = $input['password'];
+
+                $user->name = $input['name'];
+                $user->email = $input['email'];
+                $user->phone = $input['phone'];
+                $user->username = $input['username'];
+                $user->password = Hash::make($password);
+                $user->role = $input['role'];
+                $user->remember_token = "default";
+                $user->save();
+
+                return Redirect::route('user.show', compact('product'));
+
+            }else{
+                // Show validation errors
+                return Redirect::route('user.edit', compact('product'))->withErrors($v)->withInput();
+            }
         }
-	}
+    }
 
 
 	/**
@@ -115,11 +109,15 @@ class UserController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		if (Auth::check())
-        {
-
+		if(Auth::check()){
+            $user = User::find($id);
+            $user->delete();
+            return Redirect::route('job.index');
+        }else{
+            return Redirect::route('job.index');
         }
-	}
+
+    }
 
 
 	/**
@@ -132,25 +130,24 @@ class UserController extends \BaseController {
 		$input = Input::all();
         $username = $input['username'];
         $password = $input['password'];
-        // $hashed = Hash::make($password);
 
         $validator = Validator::make(
-            array(
-                'username' => $username,
-                'password' => $password,
-            ),
-            array(
-                'username' => 'required',
-                'password' => 'required',
-            )
-        );
+                                     array(
+                                           'username' => $username,
+                                           'password' => $password,
+                                           ),
+                                     array(
+                                           'username' => 'required',
+                                           'password' => 'required',
+                                           )
+                                     );
 
         if ($validator->passes() && Auth::attempt(compact('username', 'password'))){
             return Redirect::to(URL::previous());
         }else{
             return Redirect::to(URL::previous())->with('message', 'Invalid username or password.')->withErrors($validator)->withInput();
         }
-	}
+    }
 
 
 	/**
@@ -162,6 +159,6 @@ class UserController extends \BaseController {
 	{
 		Auth::logout();
         return Redirect::route('job.index');
-	}
+    }
 
 }

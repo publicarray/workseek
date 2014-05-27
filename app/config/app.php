@@ -78,7 +78,7 @@ return array(
 	|
 	*/
 
-	'key' => 'YourSecretKey!!!',
+	'key' => 'ndgBlEyxMalV2ctkZJQ10UH2A53HFKZ6',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -119,6 +119,7 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+        'Codesleeve\Stapler\StaplerServiceProvider',
 
 	),
 

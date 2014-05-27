@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployersTable extends Migration {
+class CreateApplicationsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,12 @@ class CreateEmployersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('employers', function($table)
+		Schema::create('applications', function($table)
         {
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('industry')->index();
-            $table->text('description');
-            $table->integer('user_id')->index();
+            $table->text('letter')->index();
+            $table->integer('seeker_id');
+            $table->integer('employer_id');
             $table->timestamps();
         });
 	}
@@ -30,7 +29,7 @@ class CreateEmployersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('employers');
+		Schema::drop('applications');
 	}
 
 }

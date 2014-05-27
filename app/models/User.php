@@ -4,7 +4,17 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
+    use Codesleeve\Stapler\Stapler;
+    public function __construct(array $attributes = array()) {
+        $this->hasAttachedFile('image', [
+            'styles' => [
+                'medium' => '300x300',
+                'thumb' => '100x100'
+                ]
+        ]);
 
+        parent::__construct($attributes);
+    }
 	/**
 	 * The database table used by the model.
 	 *
@@ -79,10 +89,4 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->email;
 	}
-
-    public  static $rules = array(
-        'username' => 'required|unique:users',
-        'password' => 'required|size:6',
-        'type' => 'required'
-    );
 }

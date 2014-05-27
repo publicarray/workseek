@@ -1,10 +1,10 @@
 @extends('layout')
 
-@section('title')Create Employer Account @stop
+@section('title')Create Job Seeker Account @stop
 
 @section('body')
 
-{{ Form::open(array('route' => 'employer.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
+{{ Form::open(array('route' => 'seeker.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-6">
@@ -39,24 +39,6 @@
         <label class="col-sm-2 control-label">Profile Picture</label>
         <div class="col-sm-6">
             <input type="file" name="image" id="image">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Industry</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" name="industry">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">City</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" name="city">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Description</label>
-        <div class="col-sm-6">
-            <input type="textarea" class="form-control" name="description">
         </div>
     </div>
     <div class="form-group">

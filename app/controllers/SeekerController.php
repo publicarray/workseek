@@ -1,6 +1,6 @@
 <?php
 
-class EmployerController extends \BaseController {
+class SeekerController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -9,8 +9,8 @@ class EmployerController extends \BaseController {
 	 */
 	public function index()
 	{
-        $records = DB::select(DB::raw('SELECT * FROM employers, users WHERE employers.user_id = users.id'));
-        return View::make('employer.index', compact('records'));
+        $records = DB::select(DB::raw('SELECT * FROM seekers, users WHERE seekers.user_id = users.id'));
+        return View::make('seeker.index', compact('records'));
 	}
 
 
@@ -21,7 +21,7 @@ class EmployerController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('employer.create');
+		return View::make('seeker.create');
 	}
 
 
@@ -33,12 +33,12 @@ class EmployerController extends \BaseController {
 	public function store()
 	{
 		$input = Input::all();
-        // $v = Validator::make($input, Employer::$rules);
+        // $v = Validator::make($input, Seeker::$rules);
 
         // if ($v->passes())
         // {
             $password = $input['password'];
-            $role = 'employer';
+            $role = 'seeker';
 
             $user = new User;
             $user->name = $input['name'];
@@ -51,16 +51,15 @@ class EmployerController extends \BaseController {
             $user->image = $input['image'];
             $user->save();
 
-            $employer = new Employer;
-            $employer->industry = $input['industry'];
-            $employer->city = $input['city'];
-            $employer->description = $input['description'];
-            $employer->user_id = $user->id;
-            $employer->save();
-            return Redirect::route('employer.show', $employer->id, $user->id);
+            $seeker = new Seeker;
+            $seeker->user_id = $user->id;
+            $seeker->save();
+
+            return Redirect::route('seeker.show', $user->id);
+
         // }else{
             // Show validation errors
-            // return Redirect::route('employer.create')->withErrors($v)->withInput();
+            // return Redirect::route('user.create')->withErrors($v)->withInput();
         // }
 	}
 
@@ -73,11 +72,18 @@ class EmployerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		if (Auth::check())
-		{
-			$employer = Employer::find($user_id);
-		 	return View::make('employer.show', $employer->id);
-		}
+        $records = DB::select(DB::raw("SELECT * FROM seekers, users WHERE users.id = $id AND seekers.user_id = users.id"));
+        var_dump($records);
+        return View::make('seeker.show', compact('records'));
+
+      //   if(Auth::check()){
+    		// $input = Input::get('id');
+      //       $user = User::find($id);
+      //       return View::make('user.index', compact('user'));
+      //   }
+      //   else{
+      //       return Redirect::route('job.index');
+      //   }
 	}
 
 
@@ -89,8 +95,7 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$employer = Employer::find($id);
-		return View::make('employer.edit', compact('employer'));
+		//
 	}
 
 

@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title')All employers @stop
+@section('title')All seekers @stop
 
 @section('body')
 

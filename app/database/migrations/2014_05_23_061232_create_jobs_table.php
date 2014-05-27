@@ -12,17 +12,17 @@ class CreateJobsTable extends Migration {
 	 */
 	public function up()
 	{
-        Schema::create('jobs', function($table)
+		Schema::create('jobs', function($table)
         {
             $table->increments('id');
             $table->string('title')->index();
-            $table->string('city')->index();
-            $table->decimal('salary')->index();
-            $table->text('description');
+            $table->integer('salary')->index();
+            $table->text('description')->index();
+            $table->integer('duration')->index();
             $table->integer('employer_id')->index();
             $table->timestamps();
-       });
-    }
+        });
+	}
 
 	/**
 	 * Reverse the migrations.
