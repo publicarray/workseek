@@ -8,11 +8,26 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/cosmo/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300">
+    <style>
+    </style>
 </head>
 <body>
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li>{{ HTML::link('seeker/create', 'Register') }}</li>
+                <li>{{ HTML::link('users/login', 'Login') }}</li>
+            </ul>
+        </div>
+    </div>
     <header>
         <h1 class="text-center">@yield('title')</h1>
     </header>
+    <div class="container">
+        @if(Session::has('message'))
+        <p class="alert">{{ Session::get('message') }}</p>
+        @endif
+    </div>
     <div class="container">
         <div class="row">
             @yield('body')

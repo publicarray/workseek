@@ -4,6 +4,12 @@
 
 @section('body')
 
+<ul>
+    @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+    @endforeach
+</ul>
+
 {{ Form::open(array('route' => 'employer.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
@@ -61,7 +67,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-6">
-            <input class="btn btn-primary" type="submit" value="Submit">
+            <input class="btn btn-primary" type="submit" value="Register">
         </div>
     </div>
 {{ Form::close() }}

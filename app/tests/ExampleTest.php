@@ -13,7 +13,12 @@ class ExampleTest extends TestCase {
 
 		$this->assertTrue($this->client->getResponse()->isOk());
 
-        $response = $this->call('GET', '/');
+        $this->call('GET', 'seeker/create');
+        $this->call('GET', 'employer/create');
+        $this->call('GET', 'seeker/1');
+        $this->call('GET', 'seeker/1/edit');
+        $this->call('GET', 'employer/3');
+
         // $response1 = $this->call('GET', 'job');
         // $response2 = $this->call('GET', 'job/result?query=');
         // $response3 = $this->call('GET', 'job/1');

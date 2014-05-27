@@ -9,8 +9,9 @@ class SeekerController extends \BaseController {
 	 */
 	public function index()
 	{
-        $records = DB::select(DB::raw('SELECT * FROM seekers, users WHERE seekers.user_id = users.id'));
-        return View::make('seeker.index', compact('records'));
+        $seekers = User::has('seeker')->get();
+        // $records = DB::select(DB::raw('SELECT * FROM seekers, users WHERE seekers.user_id = users.id'));
+        return View::make('seeker.index', compact('seekers'));
 	}
 
 
@@ -52,6 +53,7 @@ class SeekerController extends \BaseController {
             $user->save();
 
             $seeker = new Seeker;
+            // $seeker->user()->associate($seeker); // same thing
             $seeker->user_id = $user->id;
             $seeker->save();
 
@@ -72,9 +74,18 @@ class SeekerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        $records = DB::select(DB::raw("SELECT * FROM seekers, users WHERE users.id = $id AND seekers.user_id = users.id"));
-        var_dump($records);
-        return View::make('seeker.show', compact('records'));
+        // $user = User::find(1)->seeker;
+        $seeker = User::whereHas('seeker', function($q) use ($id)
+            {
+                $q->where('user_id', '=', $id);
+            })->first();
+
+        // $seeker = User::has('seeker')->get();
+        // $user = User::where('id', '=', $id)->take(1)->get();
+        // $seeker = User::find(1)->seeker;
+        // $records = DB::select(DB::raw("SELECT * FROM seekers, users WHERE users.id = $id AND seekers.user_id = users.id"));
+        // var_dump($records);
+        return View::make('seeker.show', compact('seeker'));
 
       //   if(Auth::check()){
     		// $input = Input::get('id');
@@ -95,7 +106,12 @@ class SeekerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+        $seeker = User::whereHas('seeker', function($q) use ($id)
+            {
+                $q->where('user_id', '=', $id);
+            })->first();
+
+		return View::make('seeker.edit', compact('seeker'));
 	}
 
 
@@ -107,7 +123,23 @@ class SeekerController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$input = Input::all();
+        $user = User::find($id);
+
+        $password = $input['password'];
+
+        $user->name = $input['name'];
+        $user->email = $input['email'];
+        $user->phone = $input['phone'];
+        $user->username = $input['username'];
+        if($password != null){
+            $user->password = Hash::make($password);
+        }
+        $user->remember_token = "default";
+        $user->image = $input['image'];
+        $user->save();
+
+        return Redirect::route('seeker.show', $user->id);
 	}
 
 

@@ -15,6 +15,17 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
         parent::__construct($attributes);
     }
+
+    public function seeker()
+    {
+        return $this->hasOne('seeker');
+    }
+
+    public function employer()
+    {
+        return $this->hasOne('employer');
+    }
+
 	/**
 	 * The database table used by the model.
 	 *

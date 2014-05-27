@@ -4,14 +4,12 @@
 
 @section('body')
 
-@foreach ($records as $record)
 <ul>
-    <li>{{{ $record->name }}}</li>
-    <li>{{{ $record->email }}}</li>
-    <li>{{{ $record->phone }}}</li>
-    <li>{{{ $record->username }}}</li>
-    <li>{{{ $record->password }}}</li>
-<img src="asset($record->image->url()) ">
-    <li>{{ link_to_route('seeker.edit', 'Edit', array($record->id)) }}</li>
+    <li>{{{ $seeker->name }}}</li>
+    <li>{{{ $seeker->email }}}</li>
+    <li>{{{ $seeker->phone }}}</li>
+    <li>{{{ $seeker->username }}}</li>
+    <li>{{{ $seeker->password }}}</li>
+<img src="{{ asset($seeker->image->url()) }}">
+    <li>{{ link_to_route('seeker.edit', 'Edit', array($seeker->id)) }}</li>
 </ul>
-@endforeach

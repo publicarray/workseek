@@ -85,7 +85,7 @@ class JobController extends \BaseController {
         $job->salary = $input['salary'];
         $job->description = $input['description'];
         $job->employer_id = $input['employer_id'];
-        $job->edit();
+        $job->save();
 
         return View::make('job.show', $job->id);
 	}

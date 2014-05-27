@@ -2,9 +2,9 @@
 
 class Application extends Eloquent {
     function Seeker() {
-        return $this->belongsTo('Seeker');
+        return $this->belongsTo('seeker');
     }
     function Job() {
-        return $this->belongsTo('Job');
+        return $this->belongsTo('job');
     }
 }

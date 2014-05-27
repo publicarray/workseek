@@ -4,9 +4,9 @@
 
 @section('body')
 
-@foreach ($records as $record)
+@foreach ($employers as $employer)
 <ul>
-    <li>{{{ $record->name }}}</li>
-    <li>{{ link_to_route('seeker.show', 'Detail', array($record->id)) }}</li>
+    <li>{{{ $employer->name }}}</li>
+    <li>{{ link_to_route('employer.show', 'Detail', array($employer->id)) }}</li>
 </ul>
 @endforeach
