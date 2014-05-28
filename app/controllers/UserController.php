@@ -158,7 +158,7 @@ class UserController extends \BaseController {
 	public function logout()
 	{
 		Auth::logout();
-        return Redirect::route('job.index');
+        return Redirect::to(URL::previous());
     }
 
 }

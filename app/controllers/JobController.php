@@ -20,8 +20,16 @@ class JobController extends \BaseController {
 	 */
 	public function create()
 	{
-		return View::make('job.create');
-	}
+        if (Auth::check()){
+            if(Auth::user()->role == 'employer'){
+                return View::make('job.create');
+            }else{
+                return Redirect::to(URL::previous())->with('message', 'Insufficient privileges');
+            }
+        }else{
+            return Redirect::to(URL::previous())->with('message', 'Session is Invalid, Sign in first!');
+        }
+    }
 
 
 	/**
@@ -31,17 +39,34 @@ class JobController extends \BaseController {
 	 */
 	public function store()
 	{
-		$input = Input::all();
-		$job = new Job;
-		$job->title = $input['name'];
-        $job->city = $input['city'];
-        $job->salary = $input['salary'];
-        $job->description = $input['description'];
-        $job->employer_id = $input['employer_id'];
-        $job->save();
+        if (Auth::check()){
+            if(Auth::user()->role == 'employer'){
+                $id = Auth::user()->id;
+                $employer = Employer::whereHas('user', function($q) use ($id)
+                {
+                    $q->where('id', '=', $id);
+                })->first();
+                $employer_id = $employer['id'];
 
-        return Redirect::route('job.show', $job->id);
-	}
+                $employer = Employer::find($id);
+
+                $input = Input::all();
+                $job = new Job;
+                $job->title = $input['title'];
+                $job->salary = $input['salary'];
+                $job->description = $input['description'];
+                $job->duration = new DateTime($input['duration']);
+                $job->employer_id = $employer_id;
+                $job->save();
+
+                return Redirect::route('job.show', $job->id);
+            }else{
+                return Redirect::to(URL::previous())->with('message', 'Insufficient privileges');
+            }
+        }else{
+            return Redirect::to(URL::previous())->with('message', 'Session is Invalid, Sign in first!');
+        }
+    }
 
 
 	/**
@@ -88,7 +113,7 @@ class JobController extends \BaseController {
         $job->save();
 
         return View::make('job.show', $job->id);
-	}
+    }
 
 
 	/**
@@ -100,9 +125,9 @@ class JobController extends \BaseController {
 	public function destroy($id)
 	{
 		$job = Job::find($id);
-   		$job->delete();
-		return Redirect::route('job.index');
-	}
+     $job->delete();
+     return Redirect::route('job.index');
+ }
 
 	/**
 	 * Display a listing of the resource based on a query.
@@ -114,14 +139,14 @@ class JobController extends \BaseController {
 		$query = Input::get('query');
 
 		$jobs = DB::table('jobs')
-			->join('employers', 'jobs.employer_id', '=', 'employers.id')
-			->where('jobs.title', 'LIKE', "%$query%")
-			->orWhere('jobs.city', 'LIKE', "%$query%")
-			->orWhere('jobs.description', 'LIKE', "%$query%")
-			->orWhere('employers.industry', 'LIKE', "%$query%")
-			->get();
+       ->join('employers', 'jobs.employer_id', '=', 'employers.id')
+       ->where('jobs.title', 'LIKE', "%$query%")
+       ->orWhere('jobs.city', 'LIKE', "%$query%")
+       ->orWhere('jobs.description', 'LIKE', "%$query%")
+       ->orWhere('employers.industry', 'LIKE', "%$query%")
+       ->get();
 
-		return View::make('job.result', compact('jobs', 'query'));
-	}
+       return View::make('job.result', compact('jobs', 'query'));
+   }
 
 }

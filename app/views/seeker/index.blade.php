@@ -10,3 +10,5 @@
     <li>{{ link_to_route('seeker.show', 'Detail', array($seeker->id)) }}</li>
 </ul>
 @endforeach
+
+@stop

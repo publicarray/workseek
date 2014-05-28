@@ -13,6 +13,9 @@
     <li>{{{ $employer->industry }}}</li>
     <li>{{{ $employer->city }}}</li>
     <li>{{{ $employer->description }}}</li>
-<img src="{{ asset($user->image->url()) }}">
-    <li>{{ link_to_route('user.edit', 'Edit', array($user->id)) }}</li>
+    <img src="{{ asset($user->image->url()) }}">
+    <li>{{ link_to_route('employer.edit', 'Edit', array($user->id)) }}</li>
+    <li>{{ link_to_route('job.create', 'Add Job') }}</li>
 </ul>
+
+@stop

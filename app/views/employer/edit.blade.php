@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title')Create Employer Account @stop
+@section('title')Employer Account @stop
 
 @section('body')
 
@@ -10,67 +10,69 @@
     @endforeach
 </ul>
 
-{{ Form::open(array('route' => 'employer.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
+<!-- ￼Form::model($product, array('method' => 'PUT', 'route' => array('product.update', $product->id))); -->
+
+
+{{ Form::model($employer, array('route' => array('employer.update', $user->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="name" placeholder="name">
+            {{ Form::text('name', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Email</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="email">
+            {{ Form::email('email', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Phone</label>
         <div class="col-sm-6">
-            <input type="number" class="form-control" name="phone">
+            {{ Form::text('phone', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Username</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="username">
+            {{ Form::text('username', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">Password</label>
+        <label class="col-sm-2 control-label">Change Password</label>
         <div class="col-sm-6">
-            <input type="password" class="form-control" name="password">
+            {{ Form::password('password', array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Profile Picture</label>
         <div class="col-sm-6">
-            <input type="file" name="image" id="image">
+            {{ Form::file('image', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Industry</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="industry">
+            {{ Form::text('industry', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">City</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="city">
+            {{ Form::text('city', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Description</label>
         <div class="col-sm-6">
-            <textarea name="description" rows="10" class="form-control"></textarea>
+            {{ Form::textarea('description', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-6">
-            <input class="btn btn-primary" type="submit" value="Register">
+            <input class="btn btn-primary" type="submit" value="Save">
         </div>
     </div>
 {{ Form::close() }}
-
 
 @stop

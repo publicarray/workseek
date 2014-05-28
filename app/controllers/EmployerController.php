@@ -9,8 +9,20 @@ class EmployerController extends \BaseController {
 	 */
 	public function index()
 	{
-        $employers = User::has('employer')->get();
-        return View::make('employer.index', compact('employers'));
+
+        if (Auth::check())
+        {
+            // $id = Auth::user()->id;
+
+            if(Auth::user()->role == 'employer'){
+                $employers = User::has('employer')->get();
+                return View::make('employer.index', compact('employers'));
+            }else{
+                return View::make('employer.index');
+            }
+        }else{
+            return View::make('employer.index');
+        }
 	}
 
 
@@ -100,6 +112,28 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+		$user = User::whereHas('employer', function($q) use ($id)
+            {
+                $q->where('user_id', '=', $id);
+            })->first();
+
+        $employer = Employer::whereHas('user', function($q) use ($id)
+            {
+                $q->where('id', '=', $id);
+            })->first();
+
+        return View::make('employer.edit', compact('employer', 'user'));
+	}
+
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
 		$input = Input::all();
         $user = User::find($id);
         $employer = User::whereHas('employer', function($q) use ($id)
@@ -127,18 +161,6 @@ class EmployerController extends \BaseController {
 
 
         return Redirect::route('employer.show', $user->id);
-	}
-
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
 	}
 
 

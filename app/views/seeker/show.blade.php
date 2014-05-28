@@ -10,6 +10,8 @@
     <li>{{{ $seeker->phone }}}</li>
     <li>{{{ $seeker->username }}}</li>
     <li>{{{ $seeker->password }}}</li>
-<img src="{{ asset($seeker->image->url()) }}">
+    <img src="{{ asset($seeker->image->url()) }}">
     <li>{{ link_to_route('seeker.edit', 'Edit', array($seeker->id)) }}</li>
 </ul>
+
+@stop
