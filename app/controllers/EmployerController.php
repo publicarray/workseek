@@ -12,8 +12,6 @@ class EmployerController extends \BaseController {
 
         if (Auth::check())
         {
-            // $id = Auth::user()->id;
-
             if(Auth::user()->role == 'employer'){
                 $employers = User::has('employer')->get();
                 return View::make('employer.index', compact('employers'));
@@ -85,24 +83,14 @@ class EmployerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        $user = User::whereHas('employer', function($q) use ($id)
-            {
-                $q->where('user_id', '=', $id);
-            })->first();
-
+        $user = User::with('employer')->find($id);
         $employer = Employer::whereHas('user', function($q) use ($id)
             {
                 $q->where('id', '=', $id);
             })->first();
 
         return View::make('employer.show', compact('employer', 'user'));
-		// if (Auth::check())
-		// {
-		// 	$employer = Employer::find($user_id);
-		//  	return View::make('employer.show', $employer->id);
-		// }
 	}
-
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -112,17 +100,20 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$user = User::whereHas('employer', function($q) use ($id)
-            {
-                $q->where('user_id', '=', $id);
-            })->first();
+        $user = User::with('employer')->find($id);
+// 		$user = User::whereHas('employer', function($q) use ($id)
+//             {
+//                 $q->where('user_id', '=', $id);
+//             })->first();
 
         $employer = Employer::whereHas('user', function($q) use ($id)
             {
                 $q->where('id', '=', $id);
             })->first();
-
-        return View::make('employer.edit', compact('employer', 'user'));
+// $user = array_merge($user, $employer);
+        
+        $user = $user->merge($employer);
+        return View::make('employer.edit', compact('user', 'employer'));
 	}
 
 

@@ -2,11 +2,11 @@
 
 class Employer extends Eloquent {
     function User() {
-        return $this->belongsTo('user');
+        return $this->belongsTo('User');
     }
     public function Jobs()
     {
-        return $this->hasMany('jobs');
+        return $this->hasMany('Jobs');
     }
     public static $rules = array(
         'name' => 'required',

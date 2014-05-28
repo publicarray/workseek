@@ -42,24 +42,29 @@ class JobController extends \BaseController {
         if (Auth::check()){
             if(Auth::user()->role == 'employer'){
                 $id = Auth::user()->id;
-                $employer = Employer::whereHas('user', function($q) use ($id)
-                {
-                    $q->where('id', '=', $id);
-                })->first();
-                $employer_id = $employer['id'];
-
-                $employer = Employer::find($id);
-
+                $employer = Employer::find(1)->user()->where('id', '=', 10)->first();
+//                 $employer = Employer::whereHas('user', function($q) use ($id)
+//                 {
+//                     $q->where('user_id', '=', 10);
+//                 })->first();
+//                 $employer_id = $employer['id'];
+                   
+                var_dump($employer);
+//                 $employer = Employer::find($id);
+                
                 $input = Input::all();
+                $date = new DateTime($input['duration']);
+                
                 $job = new Job;
                 $job->title = $input['title'];
                 $job->salary = $input['salary'];
                 $job->description = $input['description'];
-                $job->duration = new DateTime($input['duration']);
-                $job->employer_id = $employer_id;
-                $job->save();
+                $job->duration = $date->format('Y-m-d H:i:s');
+//                 $job->employer_id = $employer_id;
+//                 $job->employer()->associate($job); // same thing
+//                 $job->save();
 
-                return Redirect::route('job.show', $job->id);
+//                 return Redirect::route('job.show', $job->id);
             }else{
                 return Redirect::to(URL::previous())->with('message', 'Insufficient privileges');
             }

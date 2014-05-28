@@ -2,10 +2,10 @@
 
 class Seeker extends Eloquent {
     function User() {
-        return $this->belongsTo('user');
+        return $this->belongsTo('User');
     }
     public function Applications()
     {
-        return $this->hasMany('applications');
+        return $this->hasMany('Applications');
     }
 }

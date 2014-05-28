@@ -2,10 +2,10 @@
 
 class Job extends Eloquent {
     function Employer() {
-        return $this->belongsTo('employer');
+        return $this->belongsTo('Employer');
     }
     public function Applications()
     {
-        return $this->hasMany('applications');
+        return $this->hasMany('Applications');
     }
 }
