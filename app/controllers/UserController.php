@@ -132,15 +132,15 @@ class UserController extends \BaseController {
         $password = $input['password'];
 
         $validator = Validator::make(
-                                     array(
-                                           'username' => $username,
-                                           'password' => $password,
-                                           ),
-                                     array(
-                                           'username' => 'required',
-                                           'password' => 'required',
-                                           )
-                                     );
+            array(
+               'username' => $username,
+               'password' => $password,
+               ),
+            array(
+               'username' => 'required',
+               'password' => 'required',
+               )
+            );
 
         if ($validator->passes() && Auth::attempt(compact('username', 'password'))){
             return Redirect::to(URL::previous());

@@ -15,6 +15,9 @@
     <li>{{{ $employer->description }}}</li>
     <img src="{{ asset($user->image->url()) }}">
     <li>{{ link_to_route('employer.edit', 'Edit', array($user->id)) }}</li>
+    {{ Form::open(array('route' => array('employer.destroy', $user->id), 'method' => 'delete')) }}
+        <button type="submit" class="btn btn-danger btn-mini">close account</button>
+    {{ Form::close() }}
     <li>{{ link_to_route('job.create', 'Add Job') }}</li>
 </ul>
 

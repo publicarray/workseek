@@ -9,7 +9,8 @@ class JobController extends \BaseController {
 	 */
 	public function index()
 	{
-		return View::make('job.index');
+        $jobs = Job::all();
+		return View::make('job.index', compact('jobs'));
 	}
 
 
@@ -42,29 +43,22 @@ class JobController extends \BaseController {
         if (Auth::check()){
             if(Auth::user()->role == 'employer'){
                 $id = Auth::user()->id;
-                $employer = Employer::find(1)->user()->where('id', '=', 10)->first();
-//                 $employer = Employer::whereHas('user', function($q) use ($id)
-//                 {
-//                     $q->where('user_id', '=', 10);
-//                 })->first();
-//                 $employer_id = $employer['id'];
-                   
-                var_dump($employer);
-//                 $employer = Employer::find($id);
-                
+                // $employer_id = User::find($id)->employer()->get(array('id')); // same thing
+                $employer_id = Employer::where('user_id', '=', $id)->get(array('id'));
+
                 $input = Input::all();
                 $date = new DateTime($input['duration']);
-                
+
                 $job = new Job;
                 $job->title = $input['title'];
                 $job->salary = $input['salary'];
                 $job->description = $input['description'];
                 $job->duration = $date->format('Y-m-d H:i:s');
-//                 $job->employer_id = $employer_id;
+                $job->employer_id = $employer_id;
 //                 $job->employer()->associate($job); // same thing
-//                 $job->save();
+                $job->save();
 
-//                 return Redirect::route('job.show', $job->id);
+                return Redirect::route('job.show', $job->id);
             }else{
                 return Redirect::to(URL::previous())->with('message', 'Insufficient privileges');
             }
@@ -108,16 +102,16 @@ class JobController extends \BaseController {
 	 */
 	public function update($id)
 	{
+        $employer_id = Employer::whereUser_id($id)->get(array('id'));
 		$input = Input::all();
 		$job = Job::find($id);
-		$job->title = $input['name'];
-        $job->city = $input['city'];
+		$job->title = $input['title'];
         $job->salary = $input['salary'];
         $job->description = $input['description'];
-        $job->employer_id = $input['employer_id'];
+        $job->employer_id = $employer_id;
         $job->save();
 
-        return View::make('job.show', $job->id);
+        return Redirect::route('job.show', $job->id);
     }
 
 
@@ -130,9 +124,9 @@ class JobController extends \BaseController {
 	public function destroy($id)
 	{
 		$job = Job::find($id);
-     $job->delete();
-     return Redirect::route('job.index');
- }
+        $job->delete();
+        return Redirect::route('job.index');
+    }
 
 	/**
 	 * Display a listing of the resource based on a query.

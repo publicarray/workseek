@@ -13,7 +13,7 @@
 <!-- ￼Form::model($product, array('method' => 'PUT', 'route' => array('product.update', $product->id))); -->
 
 
-{{ Form::model $user, array('route' => array('employer.update', $user->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
+{{ Form::model ($user, array('route' => array('employer.update', $user->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-6">

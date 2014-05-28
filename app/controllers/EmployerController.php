@@ -84,10 +84,7 @@ class EmployerController extends \BaseController {
 	public function show($id)
 	{
         $user = User::with('employer')->find($id);
-        $employer = Employer::whereHas('user', function($q) use ($id)
-            {
-                $q->where('id', '=', $id);
-            })->first();
+        $employer = Employer::whereUser_id($id)->first();
 
         return View::make('employer.show', compact('employer', 'user'));
 	}
@@ -101,18 +98,16 @@ class EmployerController extends \BaseController {
 	public function edit($id)
 	{
         $user = User::with('employer')->find($id);
-// 		$user = User::whereHas('employer', function($q) use ($id)
-//             {
-//                 $q->where('user_id', '=', $id);
-//             })->first();
+        // $employer = Employer::whereUser_id($id)->first();
+        $employer = $user['employer'];
+        printf($user);
+        echo('</br>');
+        printf($employer);
+        echo('</br>');
+        // printf($combined);
+    // $user = array_merge($user, $employer);
 
-        $employer = Employer::whereHas('user', function($q) use ($id)
-            {
-                $q->where('id', '=', $id);
-            })->first();
-// $user = array_merge($user, $employer);
-        
-        $user = $user->merge($employer);
+    // $user = $user->merge($employer);
         return View::make('employer.edit', compact('user', 'employer'));
 	}
 
@@ -127,10 +122,7 @@ class EmployerController extends \BaseController {
 	{
 		$input = Input::all();
         $user = User::find($id);
-        $employer = User::whereHas('employer', function($q) use ($id)
-            {
-                $q->where('user_id', '=', $id);
-            })->first();
+        $employer = Employer::whereUser_id($id)->first();
 
         $password = $input['password'];
 
@@ -150,7 +142,6 @@ class EmployerController extends \BaseController {
         $employer->description = $input['description'];
         $employer->save();
 
-
         return Redirect::route('employer.show', $user->id);
 	}
 
@@ -163,7 +154,12 @@ class EmployerController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+        $employer_id = Employer::whereUser_id($id)->get(array('id'));
+        Auth::logout();
+        Job::whereEmployer_id($employer_id)->delete();
+        User::find($id)->employer()->delete();
+        User::find($id)->delete();
+        return Redirect::route('employer.index');
 	}
 
 

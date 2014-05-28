@@ -10,7 +10,6 @@ class SeekerController extends \BaseController {
 	public function index()
 	{
         $seekers = User::has('seeker')->get();
-        // $records = DB::select(DB::raw('SELECT * FROM seekers, users WHERE seekers.user_id = users.id'));
         return View::make('seeker.index', compact('seekers'));
 	}
 
@@ -74,17 +73,8 @@ class SeekerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        // $user = User::find(1)->seeker;
-        $seeker = User::whereHas('seeker', function($q) use ($id)
-            {
-                $q->where('user_id', '=', $id);
-            })->first();
-
-        // $seeker = User::has('seeker')->get();
-        // $user = User::where('id', '=', $id)->take(1)->get();
-        // $seeker = User::find(1)->seeker;
-        // $records = DB::select(DB::raw("SELECT * FROM seekers, users WHERE users.id = $id AND seekers.user_id = users.id"));
-        // var_dump($records);
+        $seeker = User::whereId($id)->first();
+        // $seeker = User::find($id)->get(); //what -- it give me all seekers???
         return View::make('seeker.show', compact('seeker'));
 
       //   if(Auth::check()){
@@ -106,11 +96,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-        $seeker = User::whereHas('seeker', function($q) use ($id)
-            {
-                $q->where('user_id', '=', $id);
-            })->first();
-
+        $seeker = Seeker::whereUser_id($id)->first();
 		return View::make('seeker.edit', compact('seeker'));
 	}
 
@@ -151,7 +137,12 @@ class SeekerController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$seeker_id = Seeker::whereUser_id($id)->get(array('id'));
+        Auth::logout();
+        Application::whereSeeker_id($seeker_id)->delete();
+        User::find($id)->seeker()->delete();
+        User::find($id)->delete();
+        return Redirect::route('seeker.index');
 	}
 
 
