@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('employerLayout')
 
 @section('title')Create Employer Account @stop
 

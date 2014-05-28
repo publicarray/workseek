@@ -15,8 +15,8 @@
     <div class="navbar navbar-default">
         <div class="container-fluid">
             <ul class="nav navbar-nav">
-                <li>{{link_to_route('seeker.create', 'Register', null, array('class'=>''))}}</li>
-                <li>{{link_to_route('employer.index', 'Employer', null, array('class'=>''))}}</li>
+                <li>{{link_to_route('employer.create', 'Register', null, array('class'=>''))}}</li>
+                <li>{{link_to_route('seeker.index', 'Seeker', null, array('class'=>''))}}</li>
             </ul>
         </div>
     </div>

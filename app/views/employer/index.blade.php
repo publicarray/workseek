@@ -1,5 +1,4 @@
-@extends('layout')
-
+@extends('employerLayout')
 @section('title')All employers @stop
 
 @section('body')
