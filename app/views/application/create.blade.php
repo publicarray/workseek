@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-6">
-            <input class="btn btn-primary" type="hidden" name="id" value="{{{$id}}}">
+            <input type="hidden" name="id" value="{{{$id}}}">
             <input class="btn btn-primary" type="submit" value="Apply">
         </div>
     </div>

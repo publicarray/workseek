@@ -4,7 +4,6 @@
 
 @section('body')
 
-
 <ul>
     <li>{{{ $job->title }}}</li>
     <li>{{{ $job->salary }}}</li>
@@ -12,7 +11,6 @@
 </ul>
 @if(Auth::check() && Auth::user()->role == 'seeker')
     <li>{{ link_to_route('application.create', 'Apply', array($job->id)) }}</li>
-    {{ Form::close() }}
 @endif
 
 @if(Auth::check() && Auth::user()->role == 'employer')
