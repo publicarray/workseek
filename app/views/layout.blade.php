@@ -18,6 +18,12 @@
                 <li>{{link_to_route('seeker.create', 'Register', null, array('class'=>''))}}</li>
                 <li>{{link_to_route('employer.index', 'Employer', null, array('class'=>''))}}</li>
             </ul>
+            @if (Auth::check())
+            <ul class="nav navbar-nav navbar-right">
+                <li><p class="navbar-text">Hello {{ Auth::user()->username }}!</p></li>
+                <li>{{ link_to_route('user.logout', 'Sign out') }}</li>
+            </ul>
+            @endif
         </div>
     </div>
     <header>

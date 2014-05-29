@@ -9,7 +9,8 @@ class ApplicationController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+		$applications = Application::all();
+        return View::make('application.index', compact('applications'));
 	}
 
 
@@ -18,9 +19,9 @@ class ApplicationController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function create($id)
 	{
-		//
+		return View::make('application.create', compact('id'));
 	}
 
 
@@ -31,7 +32,25 @@ class ApplicationController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		$input = Input::all();
+        $job_id = $input['id'];
+        // $v = Validator::make($input, Employer::$rules);
+        // if ($v->passes())
+        // {
+        if(Auth::check() && Auth::user()->role == 'seeker'){
+
+            $id = Auth::user()->id;
+            $seeker_id = Seeker::whereUser_id($id)->get(array('id'));
+
+
+            $application = new Application;
+            $application->letter = $input['letter'];
+            $application->seeker_id = $seeker_id;
+            $application->job_id = $job_id;
+            $application->save();
+
+        }
+            return Redirect::route('application.show', $application->id);
 	}
 
 
@@ -43,7 +62,8 @@ class ApplicationController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$application = Application::find($id)->first();
+        return View::make('application.show', compact('application'));
 	}
 
 

@@ -16,10 +16,12 @@ Route::get('/', array('as'=>'home', 'uses'=> 'JobController@index'));
 Route::post('user/login', array('as' => 'user.login', 'uses' => 'UserController@login'));
 Route::get('user/logout', array('as' => 'user.logout', 'uses' => 'UserController@logout'));
 
+Route::get('application/create/{$id}', array('as' => 'application.create', 'uses' => 'ApplicationController@create'));
+
 Route::resource('user', 'UserController');
 Route::resource('employer', 'EmployerController');
 Route::resource('seeker', 'SeekerController');
-Route::resource('application', 'ApplicationController');
+// Route::resource('application', 'ApplicationController');
 // Route::get('job/result', array('as' => 'job.result', 'uses' => 'JobController@result'));
 Route::resource('job', 'JobController');
 
