@@ -4,17 +4,28 @@
 
 @section('body')
 
-<ul>
-    <li>{{{ $seeker->name }}}</li>
-    <li>{{{ $seeker->email }}}</li>
-    <li>{{{ $seeker->phone }}}</li>
-    <li>{{{ $seeker->username }}}</li>
-    <li>{{{ $seeker->password }}}</li>
-    <img src="{{ asset($seeker->image->url()) }}">
-    <li>{{ link_to_route('seeker.edit', 'Edit', array($seeker->id)) }}</li>
-    {{ Form::open(array('route' => array('seeker.destroy', $seeker->id), 'method' => 'delete')) }}
-        <button type="submit" class="btn btn-danger btn-mini">close account</button>
+<div class="col-xs-12">
+    <img src="{{ asset($user->image->url()) }}">
+    <h2>{{{ $user->name }}}</h2>
+</div>
+<div class="col-xs-6 col-sm-4">
+    <p><i class="glyphicon glyphicon-user"></i> User name:</p>
+    <p><i class="glyphicon glyphicon-envelope"></i> Email:</p>
+    <p><i class="glyphicon glyphicon-earphone"></i> Phone:</p>
+</div>
+<div class="col-xs-6 col-sm-8">
+    <p>{{{ $user->username }}}</p>
+    <p>{{{ $user->email }}}</p>
+    <p>{{{ $user->phone }}}</p>
+</div>
+<div class="row"></div>
+<div class="col-xs-6">
+    {{ link_to_route('seeker.edit', 'Edit Profile', array($user->id), array('class'=>'btn btn-primary')) }}
+</div>
+<div class="col-xs-6">
+    {{ Form::open(array('route' => array('seeker.destroy', $user->id), 'method' => 'delete')) }}
+    <button type="submit" class="btn btn-danger">Close Account</button>
     {{ Form::close() }}
-</ul>
+</div>
 
 @stop

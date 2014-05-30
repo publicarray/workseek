@@ -54,5 +54,4 @@
     </div>
 {{ Form::close() }}
 
-
 @stop

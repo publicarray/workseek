@@ -73,18 +73,12 @@ class SeekerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        $seeker = User::whereId($id)->first();
-        // $seeker = User::find($id)->get(); //what -- it give me all seekers???
-        return View::make('seeker.show', compact('seeker'));
-
-      //   if(Auth::check()){
-    		// $input = Input::get('id');
-      //       $user = User::find($id);
-      //       return View::make('user.index', compact('user'));
-      //   }
-      //   else{
-      //       return Redirect::route('job.index');
-      //   }
+        if(Auth::check() && Auth::user()->role == 'seeker'){
+            $id = Auth::user()->id;
+            $user = User::whereId($id)->first();
+            return View::make('seeker.show', compact('user'));
+        }
+        return Redirect::route('home')->with('message','Session is Invalid, Please Sign in first!');
 	}
 
 

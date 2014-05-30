@@ -3,21 +3,36 @@
 @section('title')Job Detail @stop
 
 @section('body')
+<div class="col-xs-12">
+    <h2>{{{ $job->title }}}</h2>
+</div>
+<div class="col-xs-6 col-sm-4">
+    <p><i class="glyphicon glyphicon-usd"></i> Annual Salary:</p>
+    <p><i class="glyphicon glyphicon-calendar"></i> Job Offer Ends:</p>
+</div>
+<div class="col-xs-6 col-sm-8">
+    <p>${{{ $job->salary }}}</p>
+    <p>DD/MM/YYYY</p>
+</div>
+<div class="col-xs-12">
+    <p>{{{ $job->description }}}</p>
+</div>
 
-<ul>
-    <li>{{{ $job->title }}}</li>
-    <li>{{{ $job->salary }}}</li>
-    <li>{{{ $job->description }}}</li>
-</ul>
 @if(Auth::check() && Auth::user()->role == 'seeker')
-    <li>{{ link_to_route('application.create', 'Apply', array($job->id)) }}</li>
+    <div class="col-xs-4">
+        {{ link_to_route('application.create', 'Apply for Job', array($job->id), array('class'=>'btn btn-primary')) }}
+    </div>
 @endif
 
 @if(Auth::check() && Auth::user()->role == 'employer')
-    <li>{{ link_to_route('job.edit', 'Edit', array($job->id)) }}</li>
-    {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete')) }}
-        <button type="submit" class="btn btn-danger btn-mini">Delete</button>
-    {{ Form::close() }}
+    <div class="col-xs-4">
+        {{ link_to_route('job.edit', 'Edit Job Offer', array($job->id), array('class'=>'btn btn-primary')) }}
+    </div>
+    <div class="col-xs-4">
+        {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete')) }}
+        <button type="submit" class="btn btn-danger">Delete Job</button>
+        {{ Form::close() }}
+    </div>
 @endif
 
 @stop

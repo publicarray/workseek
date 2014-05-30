@@ -1,24 +1,39 @@
-@extends('employerLayout')
+@extends('layout')
 
 @section('title')A Employer @stop
 
 @section('body')
-
-<ul>
-    <li>{{{ $user->name }}}</li>
-    <li>{{{ $user->email }}}</li>
-    <li>{{{ $user->phone }}}</li>
-    <li>{{{ $user->username }}}</li>
-    <li>{{{ $user->password }}}</li>
-    <li>{{{ $employer->industry }}}</li>
-    <li>{{{ $employer->city }}}</li>
-    <li>{{{ $employer->description }}}</li>
-    <img src="{{ asset($user->image->url()) }}">
-    <li>{{ link_to_route('employer.edit', 'Edit', array($user->id)) }}</li>
-    {{ Form::open(array('route' => array('employer.destroy', $user->id), 'method' => 'delete')) }}
-        <button type="submit" class="btn btn-danger btn-mini">close account</button>
-    {{ Form::close() }}
-    <li>{{ link_to_route('job.create', 'Add Job') }}</li>
-</ul>
+    <div class="col-xs-12">
+        <img src="{{ asset($user->image->url()) }}">
+        <h2>{{{ $user->name }}}</h2>
+    </div>
+    <div class="col-xs-6 col-sm-4">
+        <p><i class="glyphicon glyphicon-user"></i> User name:</p>
+        <p><i class="glyphicon glyphicon-envelope"></i> Email:</p>
+        <p><i class="glyphicon glyphicon-earphone"></i> Phone:</p>
+        <p><i class="glyphicon glyphicon-globe"></i> City:</p>
+        <p><i class="glyphicon glyphicon-briefcase"></i> Industry:</p>
+    </div>
+    <div class="col-xs-6 col-sm-8">
+        <p>{{{ $user->username }}}</p>
+        <p>{{{ $user->email }}}</p>
+        <p>{{{ $user->phone }}}</p>
+        <p>{{{ $employer->city }}}</p>
+        <p>{{{ $employer->industry }}}</p>
+    </div>
+    <div class="col-xs-12">
+        <p>{{{ $employer->description }}}</p>
+    </div>
+    <div class="col-xs-4">
+        {{ link_to_route('employer.edit', 'Edit Profile', array($user->id), array('class'=>'btn btn-primary')) }}
+    </div>
+    <div class="col-xs-4">
+        {{ link_to_route('job.create', 'Add a Job Offer', null, array('class'=>'btn btn-primary')) }}
+    </div>
+    <div class="col-xs-4">
+        {{ Form::open(array('route' => array('employer.destroy', $user->id), 'method' => 'delete')) }}
+        <button type="submit" class="btn btn-danger">Close Account</button>
+        {{ Form::close() }}
+    </div>
 
 @stop

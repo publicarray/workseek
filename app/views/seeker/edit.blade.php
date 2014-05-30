@@ -10,9 +10,6 @@
     @endforeach
 </ul>
 
-<!-- ￼Form::model($product, array('method' => 'PUT', 'route' => array('product.update', $product->id))); -->
-
-
 {{ Form::model($seeker, array('route' => array('seeker.update', $seeker->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>

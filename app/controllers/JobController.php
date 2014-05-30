@@ -9,6 +9,19 @@ class JobController extends \BaseController {
 	 */
 	public function index()
 	{
+        if (Input::has('query'))
+        {
+            $query = Input::get('query');
+            $query = trim(trim($query, '$'));
+
+            $jobs = Job::where('title', 'LIKE', "%$query%")
+                ->orWhere('description', 'LIKE', "%$query%")
+                ->orWhere('salary', '>', "$query")
+                ->get();
+
+            return View::make('job.index', compact('jobs', 'query'));
+        }
+
         $jobs = Job::all();
 		return View::make('job.index', compact('jobs'));
 	}
@@ -25,10 +38,10 @@ class JobController extends \BaseController {
             if(Auth::user()->role == 'employer'){
                 return View::make('job.create');
             }else{
-                return Redirect::to(URL::previous())->with('message', 'Insufficient privileges');
+                return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges.');
             }
         }else{
-            return Redirect::to(URL::previous())->with('message', 'Session is Invalid, Sign in first!');
+            return Redirect::to(URL::previous())->with('message', 'Session is Invalid, Please Sign in first!');
         }
     }
 

@@ -1,4 +1,4 @@
-@extends('employerLayout')
+@extends('layout')
 
 @section('title')Create Employer Account @stop
 
@@ -71,6 +71,5 @@
         </div>
     </div>
 {{ Form::close() }}
-
 
 @stop

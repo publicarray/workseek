@@ -9,18 +9,8 @@ class EmployerController extends \BaseController {
 	 */
 	public function index()
 	{
-
-        if (Auth::check())
-        {
-            if(Auth::user()->role == 'employer'){
-                $employers = User::has('employer')->get();
-                return View::make('employer.index', compact('employers'));
-            }else{
-                return View::make('employer.index');
-            }
-        }else{
-            return View::make('employer.index');
-        }
+        $employers = User::has('employer')->get();
+        return View::make('employer.index', compact('employers'));
 	}
 
 
@@ -83,10 +73,13 @@ class EmployerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        $user = User::with('employer')->find($id);
-        $employer = Employer::whereUser_id($id)->first();
-
-        return View::make('employer.show', compact('employer', 'user'));
+        if(Auth::check() && Auth::user()->role == 'employer'){
+            $id = Auth::user()->id;
+            $user = User::with('employer')->find($id);
+            $employer = Employer::whereUser_id($id)->first();
+            return View::make('employer.show', compact('employer', 'user'));
+        }
+        return Redirect::route('home')->with('message', 'Insufficient Privileges.');
 	}
 
 	/**
