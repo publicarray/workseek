@@ -1,4 +1,4 @@
-@extends('employerLayout')
+@extends('layout')
 
 @section('title')Apply Application @stop
 

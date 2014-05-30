@@ -16,7 +16,7 @@ class CreateJobsTable extends Migration {
         {
             $table->increments('id');
             $table->string('title')->index();
-            $table->integer('salary')->index();
+            $table->float('salary')->index();
             $table->text('description')->index();
             $table->integer('duration')->index();
             $table->integer('employer_id')->index();
