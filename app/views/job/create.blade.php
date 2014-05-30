@@ -20,7 +20,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Salary</label>
         <div class="col-sm-6">
-            <input type="number" class="form-control" name="salary" placeholder="$">
+            <input type="text" class="form-control" name="salary" placeholder="$">
         </div>
     </div>
     <div class="form-group">
