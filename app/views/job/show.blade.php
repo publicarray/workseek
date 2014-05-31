@@ -22,17 +22,17 @@
 
 @if(Auth::check() && Auth::user()->role == 'seeker')
     <div class="col-xs-4">
-        {{ link_to_route('application.create', 'Apply for Job', array($job->id), array('class'=>'btn btn-primary')) }}
+        {{ link_to_route('application.create', 'Apply for Job', array($job->id), array('class'=>'btn btn-primary btn-block')) }}
     </div>
 @endif
 
 @if(Auth::check() && Auth::user()->role == 'employer')
     <div class="col-xs-4">
-        {{ link_to_route('job.edit', 'Edit Job Offer', array($job->id), array('class'=>'btn btn-primary')) }}
+        {{ link_to_route('job.edit', 'Edit Job Offer', array($job->id), array('class'=>'btn btn-primary btn-block')) }}
     </div>
     <div class="col-xs-4">
         {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete')) }}
-        <button type="submit" class="btn btn-danger">Delete Job</button>
+        <button type="submit" class="btn btn-danger btn-block">Delete Job</button>
         {{ Form::close() }}
     </div>
 @endif

@@ -20,7 +20,7 @@
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-6">
             <input type="hidden" name="id" value="{{{$id}}}">
-            <input class="btn btn-primary" type="submit" value="Apply">
+            <input class="btn btn-primary btn-block" type="submit" value="Apply">
         </div>
     </div>
 {{ Form::close() }}

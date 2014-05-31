@@ -21,6 +21,9 @@
     <li>{{ link_to_route('job.show', 'Detail', array($job->id)) }}</li>
 </ul>
 @endforeach
+
+{{ $jobs->links() }}
+
 @endif
 
 @stop

@@ -87,15 +87,15 @@
                 {{link_to_route('employer.show', 'View Profile')}}
             </div>
             <div class="col-sm-12">
-                {{ link_to_route('job.create', 'Advertise a Job', null, array('class'=>'btn btn-primary', 'style'=>'width:50%;')) }}
+                {{ link_to_route('job.create', 'Advertise a Job', null, array('class'=>'btn btn-primary btn-block')) }}
             </div>
             <div class="col-sm-12">
-                {{ link_to_route('job.listjobs', 'Show all Jobs', null, array('class'=>'btn btn-primary', 'style'=>'width:50%;')) }}
+                {{ link_to_route('job.listjobs', 'Show all Jobs', null, array('class'=>'btn btn-primary btn-block')) }}
             </div>
             @endif
             <div class="col-sm-12">
                 <br />
-                {{link_to_route('user.logout', 'Sign out', null, array('class'=>'btn btn-primary', 'style'=>'width:50%;'))}}
+                {{link_to_route('user.logout', 'Sign out', null, array('class'=>'btn btn-primary btn-block'))}}
             </div>
             @else
             {{ Form::open(array('route' => 'user.login', 'method' => 'POST', 'class'=>'form-horizontal')) }}
@@ -114,11 +114,11 @@
                 @endif
             </div>
             <div class="col-xs-12">
-                <div class="col-xs-4 col-md-offset-3">
-                    {{ Form::submit('Sign In', array('class'=>'btn btn-primary')) }}
+                <div class="col-md-4 col-md-offset-3">
+                    {{ Form::submit('Sign In', array('class'=>'btn btn-primary btn-block')) }}
                 </div>
-                <div class="col-xs-5">
-                    {{link_to_route('seeker.create', 'or Register', null, array('class'=>'btn btn-default'))}}
+                <div class="col-md-5">
+                    {{link_to_route('seeker.create', 'or Register', null, array('class'=>'btn btn-default btn-block'))}}
                 </div>
             </div>
             {{ Form::close() }}

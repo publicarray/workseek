@@ -23,14 +23,14 @@
         <p>{{{ $employer->description }}}</p>
     </div>
     <div class="col-xs-4">
-        {{ link_to_route('employer.edit', 'Edit Profile', array($user->id), array('class'=>'btn btn-primary')) }}
+        {{ link_to_route('employer.edit', 'Edit Profile', array($user->id), array('class'=>'btn btn-primary btn-block')) }}
     </div>
     <div class="col-xs-4">
-        {{ link_to_route('job.create', 'Add a Job Offer', null, array('class'=>'btn btn-primary')) }}
+        {{ link_to_route('job.create', 'Add a Job Offer', null, array('class'=>'btn btn-primary btn-block')) }}
     </div>
     <div class="col-xs-4">
         {{ Form::open(array('route' => array('employer.destroy', $user->id), 'method' => 'delete')) }}
-        <button type="submit" class="btn btn-danger">Close Account</button>
+        <button type="submit" class="btn btn-danger btn-block">Close Account</button>
         {{ Form::close() }}
     </div>
 

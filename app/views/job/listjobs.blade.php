@@ -8,7 +8,6 @@ of {{{Auth::user()->name}}}
 
 @section('body')
 
-
 @if (!isset($jobs) || count($jobs) === 0)
     <p class="bg-warning text-center" style="color:#fff;">Sorry we could not find any Jobs under your account.</p>
 @else
@@ -19,7 +18,7 @@ of {{{Auth::user()->name}}}
     <li>{{ link_to_route('job.show', 'Detail', array($job->id)) }}</li>
     {{ Form::open(array('route' => 'application.index', 'method' => 'get', 'class'=>'form-horizontal')) }}
             <input type="hidden" name="id" value="{{{$job->id}}}">
-            <input class="btn btn-primary" type="submit" value="View Applications">
+            <input class="btn btn-primary btn-block" type="submit" value="View Applications">
     {{ Form::close() }}
 </ul>
 @endforeach

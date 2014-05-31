@@ -9,24 +9,16 @@ class JobController extends \BaseController {
 	 */
 	public function index()
 	{
+        $items_per_page = 10;
+
         if (Input::has('query'))
         {
             $query = Input::get('query');
-            $query = trim(trim($query, '$'));
-
-            $jobs = DB::table('jobs')
-                ->join('employers', 'jobs.employer_id', '=', 'employers.id')
-                ->where('jobs.title', 'LIKE', "%$query%")
-                ->orWhere('jobs.city', 'LIKE', "%$query%")
-                ->orWhere('jobs.description', 'LIKE', "%$query%")
-                ->orWhere('salary', '>', "$query")
-                ->orWhere('employers.industry', 'LIKE', "%$query%")
-                ->get();
-
+            $jobs = Includes::search($query)->paginate($items_per_page);
             return View::make('job.index', compact('jobs', 'query'));
         }else{
 
-            $jobs = Job::all();
+            $jobs = Job::paginate($items_per_page);
     		return View::make('job.index', compact('jobs'));
         }
 	}
@@ -178,26 +170,6 @@ class JobController extends \BaseController {
         $job->delete();
         return Redirect::route('job.index');
     }
-
-	/**
-	 * Display a listing of the resource based on a query.
-	 *
-	 * @return Response
-	 */
-	public function result()
-	{
-		$query = Input::get('query');
-
-		$jobs = DB::table('jobs')
-       ->join('employers', 'jobs.employer_id', '=', 'employers.id')
-       ->where('jobs.title', 'LIKE', "%$query%")
-       ->orWhere('jobs.city', 'LIKE', "%$query%")
-       ->orWhere('jobs.description', 'LIKE', "%$query%")
-       ->orWhere('employers.industry', 'LIKE', "%$query%")
-       ->get();
-
-       return View::make('job.result', compact('jobs', 'query'));
-   }
 
 
    /**
