@@ -78,3 +78,11 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+
+Route::filter('login', function($route, $request, $type)
+{
+    if (!(Auth::check() && Auth::user()->role == $type)) {
+        return Redirect::route('home')->with('message', 'Insufficient Privileges.');
+    }
+});
