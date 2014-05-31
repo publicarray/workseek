@@ -43,7 +43,7 @@ class UserController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		return View::make('job.create');
+		//
 	}
 
 
@@ -55,12 +55,7 @@ class UserController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		if(Auth::check()){
-            $user = Product::find($id);
-            return View::make('user.edit', compact('user'));
-        }else{
-            return Redirect::route('job.index');
-        }
+		//
     }
 
 
@@ -72,32 +67,7 @@ class UserController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		if (Auth::check())
-        {
-            $user = User::find($id);
-            $input = Input::all();
-            $v = Validator::make($input, User::$rules);
-
-            if ($v->passes())
-            {
-                $password = $input['password'];
-
-                $user->name = $input['name'];
-                $user->email = $input['email'];
-                $user->phone = $input['phone'];
-                $user->username = $input['username'];
-                $user->password = Hash::make($password);
-                $user->role = $input['role'];
-                $user->remember_token = "default";
-                $user->save();
-
-                return Redirect::route('user.show', compact('product'));
-
-            }else{
-                // Show validation errors
-                return Redirect::route('user.edit', compact('product'))->withErrors($v)->withInput();
-            }
-        }
+		//
     }
 
 
@@ -109,13 +79,7 @@ class UserController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		if(Auth::check()){
-            $user = User::find($id);
-            $user->delete();
-            return Redirect::route('job.index');
-        }else{
-            return Redirect::route('job.index');
-        }
+		//
 
     }
 

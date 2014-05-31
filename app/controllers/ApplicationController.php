@@ -12,6 +12,7 @@ class ApplicationController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = $_GET['id'];
             $applications = Application::wherejob_id($id)->get();
+
             return View::make('application.index', compact('applications'));
         }else{
             $applications = Application::all();
@@ -44,13 +45,13 @@ class ApplicationController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'seeker')
         {
             $id = Auth::user()->id;
-            $seeker_id = Seeker::whereUser_id($id)->get(array('id')[0]['id']);
-            if(Application::whereSeeker_id($seeker_id)->get())
+            $seeker_id = Seeker::whereUser_id($id)->get(array('id'))[0]['id'];
+            if(Application::whereSeeker_id($seeker_id)->whereJob_id($job_id)->exists())
             {
                 return Redirect::route('application.create')->with('message', 'You have already Applied for this Job!')->withInput();
             }else
             {
-                $v = Validator::make($input, Seeker::$rules);
+                $v = Validator::make($input, Application::$rules);
                 if ($v->passes())
                 {
                     $application = new Application;

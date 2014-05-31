@@ -8,7 +8,7 @@ class Application extends Eloquent {
         return $this->belongsTo('Job');
     }
     public static $rules = array(
-        'description' => 'required',
-        'job_id' => 'required',
+        'letter' => 'required',
+        'id' => 'required',
     );
 }

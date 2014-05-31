@@ -14,10 +14,13 @@ class JobController extends \BaseController {
             $query = Input::get('query');
             $query = trim(trim($query, '$'));
 
-            $jobs = Job::where('title', 'LIKE', "%$query%")
-                ->orWhere('description', 'LIKE', "%$query%")
-                ->orWhere('city', 'LIKE', "%$query%")
+            $jobs = DB::table('jobs')
+                ->join('employers', 'jobs.employer_id', '=', 'employers.id')
+                ->where('jobs.title', 'LIKE', "%$query%")
+                ->orWhere('jobs.city', 'LIKE', "%$query%")
+                ->orWhere('jobs.description', 'LIKE', "%$query%")
                 ->orWhere('salary', '>', "$query")
+                ->orWhere('employers.industry', 'LIKE', "%$query%")
                 ->get();
 
             return View::make('job.index', compact('jobs', 'query'));
@@ -57,23 +60,30 @@ class JobController extends \BaseController {
 	{
         if (Auth::check()){
             if(Auth::user()->role == 'employer'){
-                $id = Auth::user()->id;
-                // $employer_id = User::find($id)->employer()->get(array('id')); // same thing
-                $employer_id = Employer::where('user_id', '=', $id)->get(array('id'))[0]['id'];
                 $input = Input::all();
-                $date = new DateTime($input['enddate']);
+                $v = Validator::make($input, Job::$rules);
+                if ($v->passes())
+                {
+                    $id = Auth::user()->id;
+                    // $employer_id = User::find($id)->employer()->get(array('id')); // same thing
+                    $employer_id = Employer::where('user_id', '=', $id)->get(array('id'))[0]['id'];
+                    $date = new DateTime($input['enddate']);
 
-                $job = new Job;
-                $job->title = $input['title'];
-                $job->salary = $input['salary'];
-                $job->city = $input['city'];
-                $job->description = $input['description'];
-                $job->enddate = $date->format('Y-m-d H:i:s');
-                $job->employer_id = $employer_id;
-//                 $job->employer()->associate($job); // same thing
-                $job->save();
+                    $job = new Job;
+                    $job->title = $input['title'];
+                    $job->salary = $input['salary'];
+                    $job->city = $input['city'];
+                    $job->description = $input['description'];
+                    $job->enddate = $date->format('Y-m-d H:i:s');
+                    $job->employer_id = $employer_id;
+    //                 $job->employer()->associate($job); // same thing
+                    $job->save();
 
-                return Redirect::route('job.show', $job->id);
+                    return Redirect::route('job.show', $job->id);
+                }else{
+                    //Show validation errors
+                    return Redirect::route('job.create')->withErrors($v)->withInput();
+                }
             }else{
                 return Redirect::to(URL::previous())->with('message', 'Insufficient privileges');
             }
@@ -117,17 +127,25 @@ class JobController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $employer_id = Employer::whereUser_id($id)->first->get(array('id'))[0]['id'];
-		$input = Input::all();
-		$job = Job::find($id);
-		$job->title = $input['title'];
-        $job->salary = $input['salary'];
-        $job->city = $input['city'];
-        $job->description = $input['description'];
-        $job->employer_id = $employer_id;
-        $job->save();
+        $input = Input::all();
+        $v = Validator::make($input, Job::$rules);
+        if ($v->passes())
+        {
+            $employer_id = Employer::whereUser_id($id)->first->get(array('id'))[0]['id'];
+    		$input = Input::all();
+    		$job = Job::find($id);
+    		$job->title = $input['title'];
+            $job->salary = $input['salary'];
+            $job->city = $input['city'];
+            $job->description = $input['description'];
+            $job->employer_id = $employer_id;
+            $job->save();
 
-        return Redirect::route('job.show', $job->id);
+            return Redirect::route('job.show', $job->id);
+        }else{
+            //Show validation errors
+            return Redirect::route('job.edit')->withErrors($v)->withInput();
+        }
     }
 
 

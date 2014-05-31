@@ -14,7 +14,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Letter</label>
         <div class="col-sm-6">
-            <textarea name="letter" rows="10" class="form-control"></textarea>
+            {{ Form::textarea('letter', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">

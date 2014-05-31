@@ -74,8 +74,9 @@ class EmployerController extends \BaseController {
 	{
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = Auth::user()->id;
-            $user = User::with('employer')->find($id);
-            $employer = Employer::whereUser_id($id)->first();
+            $user = User::find($id);
+            $employer = User::find($id)->employer()->first();
+
             return View::make('employer.show', compact('employer', 'user'));
         }
         return Redirect::route('home')->with('message', 'Insufficient Privileges.');
@@ -89,18 +90,22 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-        $user = User::with('employer')->find($id);
-        // $employer = Employer::whereUser_id($id)->first();
-        $employer = $user['employer'];
-        printf($user);
-        echo('</br>');
-        printf($employer);
-        echo('</br>');
-        // printf($combined);
-    // $user = array_merge($user, $employer);
+        if(Auth::check() && Auth::user()->role == 'employer'){
+            // $user = User::with("employer")->find($id);
+            $id = htmlspecialchars($id);
+            $user = DB::select("select * from employers, users WHERE users.id = $id AND users.id = employers.user_id")[0];
+            // $employer = User::find($id)->employer()->get();
 
-    // $user = $user->merge($employer);
-        return View::make('employer.edit', compact('user', 'employer'));
+            // $employer = $user->merge($employer);
+            // $employer = $employer->find($id);
+
+            // printf($user);
+            // var_dump($user);
+
+            return View::make('employer.edit', compact('user'));
+        }else{
+            return Redirect::route('home')->with('message', 'Insufficient Privileges.');
+        }
 	}
 
 
@@ -113,7 +118,7 @@ class EmployerController extends \BaseController {
 	public function update($id)
 	{
 		$input = Input::all();
-        $v = Validator::make($input, Seeker::$rules);
+        $v = Validator::make($input, Employer::$rules);
         if ($v->passes())
         {
             $user = User::find($id);
@@ -153,12 +158,17 @@ class EmployerController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-        $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
-        Auth::logout();
-        Job::whereEmployer_id($employer_id)->delete();
-        User::find($id)->employer()->delete();
-        User::find($id)->delete();
-        return Redirect::route('employer.index');
+        if(Auth::check() && Auth::user()->role == 'employer'){
+            $id = Auth::user()->id;
+            $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
+            Auth::logout();
+            Job::whereEmployer_id($employer_id)->delete();
+            User::find($id)->employer()->delete();
+            User::find($id)->delete();
+            return Redirect::route('employer.index');
+        }else{
+            return Redirect::route('home')->with('message', 'Insufficient Privileges.');
+        }
 	}
 
 
