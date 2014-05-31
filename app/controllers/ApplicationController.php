@@ -82,7 +82,10 @@ class ApplicationController extends \BaseController {
     public function show($id)
     {
         $application = Application::find($id)->first();
-        return View::make('application.show', compact('application'));
+        $seeker = Application::find($id)->seeker()->first();
+        $user = user::find($seeker['user_id'])->first();
+        // print_r($user.'');
+        return View::make('application.show', compact('application', 'user'));
     }
 
 
