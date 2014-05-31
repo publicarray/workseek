@@ -122,7 +122,7 @@ class UserController extends \BaseController {
 	public function logout()
 	{
 		Auth::logout();
-        return Redirect::to(URL::previous());
+        return Redirect::route('home');
     }
 
 }
