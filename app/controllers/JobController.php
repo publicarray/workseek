@@ -16,14 +16,16 @@ class JobController extends \BaseController {
 
             $jobs = Job::where('title', 'LIKE', "%$query%")
                 ->orWhere('description', 'LIKE', "%$query%")
+                ->orWhere('city', 'LIKE', "%$query%")
                 ->orWhere('salary', '>', "$query")
                 ->get();
 
             return View::make('job.index', compact('jobs', 'query'));
-        }
+        }else{
 
-        $jobs = Job::all();
-		return View::make('job.index', compact('jobs'));
+            $jobs = Job::all();
+    		return View::make('job.index', compact('jobs'));
+        }
 	}
 
 
@@ -57,16 +59,16 @@ class JobController extends \BaseController {
             if(Auth::user()->role == 'employer'){
                 $id = Auth::user()->id;
                 // $employer_id = User::find($id)->employer()->get(array('id')); // same thing
-                $employer_id = Employer::where('user_id', '=', $id)->get(array('id'));
-
+                $employer_id = Employer::where('user_id', '=', $id)->get(array('id'))[0]['id'];
                 $input = Input::all();
-                $date = new DateTime($input['duration']);
+                $date = new DateTime($input['enddate']);
 
                 $job = new Job;
                 $job->title = $input['title'];
                 $job->salary = $input['salary'];
+                $job->city = $input['city'];
                 $job->description = $input['description'];
-                $job->duration = $date->format('Y-m-d H:i:s');
+                $job->enddate = $date->format('Y-m-d H:i:s');
                 $job->employer_id = $employer_id;
 //                 $job->employer()->associate($job); // same thing
                 $job->save();
@@ -115,11 +117,12 @@ class JobController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $employer_id = Employer::whereUser_id($id)->get(array('id'));
+        $employer_id = Employer::whereUser_id($id)->first->get(array('id'))[0]['id'];
 		$input = Input::all();
 		$job = Job::find($id);
 		$job->title = $input['title'];
         $job->salary = $input['salary'];
+        $job->city = $input['city'];
         $job->description = $input['description'];
         $job->employer_id = $employer_id;
         $job->save();
@@ -161,4 +164,22 @@ class JobController extends \BaseController {
        return View::make('job.result', compact('jobs', 'query'));
    }
 
+
+   /**
+     * Display a listing of the Jobs of a particular employer.
+     *
+     * @return Response
+     */
+    public function listjobs()
+    {
+        if(Auth::check() && Auth::user()->role == 'employer'){
+            $id = Auth::user()->id;
+            $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
+            $jobs = Job::whereEmployer_id($employer_id)->get();
+            return View::make('job.listjobs', compact('jobs'));
+        }else{
+            $jobs = Job::all();
+            return View::make('job.index', compact('jobs'));
+        }
+    }
 }

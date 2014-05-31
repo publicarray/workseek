@@ -89,6 +89,9 @@
             <div class="col-sm-12">
                 {{ link_to_route('job.create', 'Advertise a Job', null, array('class'=>'btn btn-primary', 'style'=>'width:50%;')) }}
             </div>
+            <div class="col-sm-12">
+                {{ link_to_route('job.listjobs', 'Show all Jobs', null, array('class'=>'btn btn-primary', 'style'=>'width:50%;')) }}
+            </div>
             @endif
             <div class="col-sm-12">
                 <br />
@@ -139,9 +142,8 @@
             </div>
         </div>
     </footer>
-</div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js" defer></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" defer></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js" defer></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" defer></script>
 </body>
 
 </html>

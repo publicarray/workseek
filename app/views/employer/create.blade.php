@@ -4,65 +4,59 @@
 
 @section('body')
 
-<ul>
+<p class="bg-warning" style="color:#fff;">
     @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
+        {{ $error }}<br />
     @endforeach
-</ul>
+</p>
 
 {{ Form::open(array('route' => 'employer.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="name" placeholder="name">
+            {{ Form::text('name', null, array('class'=>'form-control','placeholder' =>'Your Name')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Email</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="email">
+             {{ Form::email('email', null, array('class'=>'form-control', 'placeholder'=>'Email Address')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Phone</label>
         <div class="col-sm-6">
-            <input type="number" class="form-control" name="phone">
+            {{ Form::text('phone', null, array('class'=>'form-control', 'placeholder'=>'Phone Number')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Username</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="username">
+            {{ Form::text('username', null, array('class'=>'form-control', 'placeholder'=>'User Name')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Password</label>
         <div class="col-sm-6">
-            <input type="password" class="form-control" name="password">
+            {{ Form::password('password', array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Profile Picture</label>
         <div class="col-sm-6">
-            <input type="file" name="image" id="image">
+            {{ Form::file('image', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Industry</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="industry">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">City</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" name="city">
+            {{ Form::text('industry', null, array('class'=>'form-control', 'placeholder'=>'Company Industry')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Description</label>
         <div class="col-sm-6">
-            <textarea name="description" rows="10" class="form-control"></textarea>
+            {{ Form::textarea('description', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">

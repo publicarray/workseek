@@ -8,4 +8,10 @@ class Job extends Eloquent {
     {
         return $this->hasMany('Applications');
     }
+    public static $rules = array(
+        'title' => 'required|alpha_num',
+        'salary' => 'required|numeric',
+        'description' => 'required',
+        'enddate' => 'required|date',
+    );
 }

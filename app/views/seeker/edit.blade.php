@@ -4,11 +4,11 @@
 
 @section('body')
 
-<ul>
+<p class="bg-warning" style="color:#fff;">
     @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
+        {{ $error }}<br />
     @endforeach
-</ul>
+</p>
 
 {{ Form::model($seeker, array('route' => array('seeker.update', $seeker->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">

@@ -11,14 +11,12 @@
         <p><i class="glyphicon glyphicon-user"></i> User name:</p>
         <p><i class="glyphicon glyphicon-envelope"></i> Email:</p>
         <p><i class="glyphicon glyphicon-earphone"></i> Phone:</p>
-        <p><i class="glyphicon glyphicon-globe"></i> City:</p>
         <p><i class="glyphicon glyphicon-briefcase"></i> Industry:</p>
     </div>
     <div class="col-xs-6 col-sm-8">
         <p>{{{ $user->username }}}</p>
         <p>{{{ $user->email }}}</p>
         <p>{{{ $user->phone }}}</p>
-        <p>{{{ $employer->city }}}</p>
         <p>{{{ $employer->industry }}}</p>
     </div>
     <div class="col-xs-12">

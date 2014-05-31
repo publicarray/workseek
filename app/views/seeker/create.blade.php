@@ -4,47 +4,47 @@
 
 @section('body')
 
-<ul>
+<p class="bg-warning" style="color:#fff;">
     @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
+        {{ $error }}<br />
     @endforeach
-</ul>
+</p>
 
 {{ Form::open(array('route' => 'seeker.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="name" placeholder="name">
+            {{ Form::text('name', null, array('class'=>'form-control', 'placeholder'=>'Your Name')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Email</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="email">
+            {{ Form::text('email', null, array('class'=>'form-control', 'placeholder'=>'Email Address')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Phone</label>
         <div class="col-sm-6">
-            <input type="number" class="form-control" name="phone">
+            {{ Form::text('phone', null, array('class'=>'form-control', 'placeholder'=>'Phone Number')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Username</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="username">
+            {{ Form::text('username', null, array('class'=>'form-control', 'placeholder'=>'User Name')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Password</label>
         <div class="col-sm-6">
-            <input type="password" class="form-control" name="password">
+            {{ Form::password('password', array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Profile Picture</label>
         <div class="col-sm-6">
-            <input type="file" name="image" id="image">
+            {{ Form::file('image')}}
         </div>
     </div>
     <div class="form-group">

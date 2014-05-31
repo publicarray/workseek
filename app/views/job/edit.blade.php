@@ -24,15 +24,21 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-sm-2 control-label">City</label>
+        <div class="col-sm-6">
+            {{ Form::text('city', null, array('class'=>'form-control', 'placeholder'=>'City or Location')) }}
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-2 control-label">Description</label>
         <div class="col-sm-6">
             {{ Form::textarea('description', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">Duration</label>
+        <label class="col-sm-2 control-label">End Job Offer Date</label>
         <div class="col-sm-6">
-            {{ Form::text('duration', null, array('class'=>'form-control')) }}
+            {{ Form::text('enddate', null, array('class'=>'form-control')) }}
         </div>
     </div>
 

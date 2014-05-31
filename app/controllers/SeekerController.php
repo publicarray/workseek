@@ -33,10 +33,9 @@ class SeekerController extends \BaseController {
 	public function store()
 	{
 		$input = Input::all();
-        // $v = Validator::make($input, Seeker::$rules);
-
-        // if ($v->passes())
-        // {
+        $v = Validator::make($input, Seeker::$rules);
+        if ($v->passes())
+        {
             $password = $input['password'];
             $role = 'seeker';
 
@@ -58,10 +57,10 @@ class SeekerController extends \BaseController {
 
             return Redirect::route('seeker.show', $user->id);
 
-        // }else{
-            // Show validation errors
-            // return Redirect::route('user.create')->withErrors($v)->withInput();
-        // }
+        }else{
+            //Show validation errors
+            return Redirect::route('seeker.create')->withErrors($v)->withInput();
+        }
 	}
 
 
@@ -104,23 +103,31 @@ class SeekerController extends \BaseController {
 	public function update($id)
 	{
 		$input = Input::all();
-        $user = User::find($id);
+        $v = Validator::make($input, Seeker::$rules);
+        if ($v->passes())
+        {
+            $user = User::find($id);
 
-        $password = $input['password'];
+            $password = $input['password'];
 
-        $user->name = $input['name'];
-        $user->email = $input['email'];
-        $user->phone = $input['phone'];
-        $user->username = $input['username'];
-        if($password != null){
-            $user->password = Hash::make($password);
+            $user->name = $input['name'];
+            $user->email = $input['email'];
+            $user->phone = $input['phone'];
+            $user->username = $input['username'];
+            if($password != null){
+                $user->password = Hash::make($password);
+            }
+            $user->remember_token = "default";
+            $user->image = $input['image'];
+            $user->save();
+
+            return Redirect::route('seeker.show', $user->id);
+
+        }else{
+            //Show validation errors
+            return Redirect::route('seeker.update')->withErrors($v)->withInput();
         }
-        $user->remember_token = "default";
-        $user->image = $input['image'];
-        $user->save();
-
-        return Redirect::route('seeker.show', $user->id);
-	}
+    }
 
 
 	/**

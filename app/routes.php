@@ -22,7 +22,7 @@ Route::resource('user', 'UserController');
 Route::resource('employer', 'EmployerController');
 Route::resource('seeker', 'SeekerController');
 Route::resource('application', 'ApplicationController');
-// Route::get('job/result', array('as' => 'job.result', 'uses' => 'JobController@result'));
+Route::get('job/listjobs', array('as' => 'job.listjobs', 'uses' => 'JobController@listjobs'));
 Route::resource('job', 'JobController');
 
 Route::get('application/create/{id}', array('as' => 'application.create', 'uses' => 'ApplicationController@create'));

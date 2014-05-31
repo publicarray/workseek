@@ -8,11 +8,13 @@
 </div>
 <div class="col-xs-6 col-sm-4">
     <p><i class="glyphicon glyphicon-usd"></i> Annual Salary:</p>
+    <p><i class="glyphicon glyphicon-globe"></i> City:</p>
     <p><i class="glyphicon glyphicon-calendar"></i> Job Offer Ends:</p>
 </div>
 <div class="col-xs-6 col-sm-8">
     <p>${{{ $job->salary }}}</p>
-    <p>DD/MM/YYYY</p>
+    <p>{{{ $job->city }}}</p>
+    <p>{{{ $job->enddate }}}</p>
 </div>
 <div class="col-xs-12">
     <p>{{{ $job->description }}}</p>

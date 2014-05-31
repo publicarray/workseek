@@ -4,35 +4,35 @@
 
 @section('body')
 
-<ul>
+<p class="bg-warning" style="color:#fff;">
     @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
+        {{ $error }}<br />
     @endforeach
-</ul>
+</p>
 
 {{ Form::model ($user, array('route' => array('employer.update', $user->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-2 control-label">Name</label>
         <div class="col-sm-6">
-            {{ Form::text('name', null, array('class'=>'form-control')) }}
+            {{ Form::text('name', null, array('class'=>'form-control','placeholder' =>'Your Name')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Email</label>
         <div class="col-sm-6">
-            {{ Form::email('email', null, array('class'=>'form-control')) }}
+           {{ Form::email('email', null, array('class'=>'form-control', 'placeholder'=>'Email Address')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Phone</label>
         <div class="col-sm-6">
-            {{ Form::text('phone', null, array('class'=>'form-control')) }}
+            {{ Form::text('phone', null, array('class'=>'form-control', 'placeholder'=>'Phone Number')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Username</label>
         <div class="col-sm-6">
-            {{ Form::text('username', null, array('class'=>'form-control')) }}
+            {{ Form::text('username', null, array('class'=>'form-control', 'placeholder'=>'User Name')) }}
         </div>
     </div>
     <div class="form-group">
@@ -50,13 +50,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Industry</label>
         <div class="col-sm-6">
-            {{ Form::text('industry', null, array('class'=>'form-control')) }}
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">City</label>
-        <div class="col-sm-6">
-            {{ Form::text('city', null, array('class'=>'form-control')) }}
+            {{ Form::text('industry', null, array('class'=>'form-control', 'placeholder'=>'Company Industry')) }}
         </div>
     </div>
     <div class="form-group">

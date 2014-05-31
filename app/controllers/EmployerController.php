@@ -33,10 +33,10 @@ class EmployerController extends \BaseController {
 	public function store()
 	{
 		$input = Input::all();
-        // $v = Validator::make($input, Employer::$rules);
+        $v = Validator::make($input, Employer::$rules);
 
-        // if ($v->passes())
-        // {
+        if ($v->passes())
+        {
             $password = $input['password'];
             $role = 'employer';
 
@@ -53,15 +53,14 @@ class EmployerController extends \BaseController {
 
             $employer = new Employer;
             $employer->industry = $input['industry'];
-            $employer->city = $input['city'];
             $employer->description = $input['description'];
             $employer->user_id = $user->id;
             $employer->save();
             return Redirect::route('employer.show', $user->id);
-        // }else{
-            // Show validation errors
-            // return Redirect::route('employer.create')->withErrors($v)->withInput();
-        // }
+        }else{
+            //Show validation errors
+            return Redirect::route('employer.create')->withErrors($v)->withInput();
+        }
 	}
 
 
@@ -114,28 +113,35 @@ class EmployerController extends \BaseController {
 	public function update($id)
 	{
 		$input = Input::all();
-        $user = User::find($id);
-        $employer = Employer::whereUser_id($id)->first();
+        $v = Validator::make($input, Seeker::$rules);
+        if ($v->passes())
+        {
+            $user = User::find($id);
+            $employer = Employer::whereUser_id($id)->first();
 
-        $password = $input['password'];
+            $password = $input['password'];
 
-        $user->name = $input['name'];
-        $user->email = $input['email'];
-        $user->phone = $input['phone'];
-        $user->username = $input['username'];
-        if($password != null){
-            $user->password = Hash::make($password);
+            $user->name = $input['name'];
+            $user->email = $input['email'];
+            $user->phone = $input['phone'];
+            $user->username = $input['username'];
+            if($password != null){
+                $user->password = Hash::make($password);
+            }
+            $user->remember_token = "default";
+            $user->image = $input['image'];
+            $user->save();
+
+            $employer->industry = $input['industry'];
+            $employer->description = $input['description'];
+            $employer->save();
+
+            return Redirect::route('employer.show', $user->id);
+
+        }else{
+            //Show validation errors
+            return Redirect::route('employer.update')->withErrors($v)->withInput();
         }
-        $user->remember_token = "default";
-        $user->image = $input['image'];
-        $user->save();
-
-        $employer->industry = $input['industry'];
-        $employer->city = $input['city'];
-        $employer->description = $input['description'];
-        $employer->save();
-
-        return Redirect::route('employer.show', $user->id);
 	}
 
 
@@ -147,7 +153,7 @@ class EmployerController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-        $employer_id = Employer::whereUser_id($id)->get(array('id'));
+        $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
         Auth::logout();
         Job::whereEmployer_id($employer_id)->delete();
         User::find($id)->employer()->delete();

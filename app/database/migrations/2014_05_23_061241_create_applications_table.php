@@ -16,7 +16,7 @@ class CreateApplicationsTable extends Migration {
         {
             $table->increments('id');
             $table->text('letter')->index();
-            $table->integer('seeker_id');
+            $table->integer('seeker_id')->unique();
             $table->integer('job_id');
             $table->timestamps();
         });

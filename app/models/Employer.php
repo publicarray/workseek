@@ -9,11 +9,13 @@ class Employer extends Eloquent {
         return $this->hasMany('Jobs');
     }
     public static $rules = array(
-        'name' => 'required',
-        'email' => 'required|unique:email',
-        'phone' => 'numeric|min:7|max:12',
+        'name' => 'required|alpha_num',
+        'email' => 'required|email|unique:users',
+        'phone' => 'numeric',
         'username' => 'required|unique:users',
-        'password' => 'required|size:6',
-        'type' => 'required'
+        'password' => 'required|min:6',
+        'image' => 'image',
+        'industry' => 'required',
+        'city' => 'required',
     );
 }

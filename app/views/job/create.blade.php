@@ -14,25 +14,31 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Title</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="title">
+            {{ Form::text('title', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Salary</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" name="salary" placeholder="$">
+            {{ Form::text('salary', null, array('class'=>'form-control', 'placeholder'=>'$')) }}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">City</label>
+        <div class="col-sm-6">
+            {{ Form::text('city', null, array('class'=>'form-control', 'placeholder'=>'City or Location')) }}
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Description</label>
         <div class="col-sm-6">
-        <textarea name="description" class="form-control" cols="30" rows="10"></textarea>
+            {{ Form::textarea('description', null, array('class'=>'form-control')) }}
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label">Duration</label>
+        <label class="col-sm-2 control-label">End Job Offer Date</label>
         <div class="col-sm-6">
-        <input type="date" class="form-control" name="duration">
+        <input type="date" class="form-control" name="enddate">
         </div>
     </div>
 

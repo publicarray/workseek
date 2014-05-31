@@ -9,8 +9,14 @@ class ApplicationController extends \BaseController {
      */
     public function index()
     {
-        $applications = Application::all();
-        return View::make('application.index', compact('applications'));
+        if(Auth::check() && Auth::user()->role == 'employer'){
+            $id = $_GET['id'];
+            $applications = Application::wherejob_id($id)->get();
+            return View::make('application.index', compact('applications'));
+        }else{
+            $applications = Application::all();
+            return View::make('application.index');
+        }
     }
 
 
@@ -35,20 +41,34 @@ class ApplicationController extends \BaseController {
         $input = Input::all();
         $job_id = $input['id'];
 
-        if(Auth::check() && Auth::user()->role == 'seeker'){
-
+        if(Auth::check() && Auth::user()->role == 'seeker')
+        {
             $id = Auth::user()->id;
-            $seeker_id = Seeker::whereUser_id($id)->get(array('id'));
-
-            $application = new Application;
-            $application->letter = $input['letter'];
-            $application->seeker_id = $seeker_id;
-            $application->job_id = $job_id;
-            $application->save();
-
-            return Redirect::route('application.show', $application->id);
+            $seeker_id = Seeker::whereUser_id($id)->get(array('id')[0]['id']);
+            if(Application::whereSeeker_id($seeker_id)->get())
+            {
+                return Redirect::route('application.create')->with('message', 'You have already Applied for this Job!')->withInput();
+            }else
+            {
+                $v = Validator::make($input, Seeker::$rules);
+                if ($v->passes())
+                {
+                    $application = new Application;
+                    $application->letter = $input['letter'];
+                    $application->seeker_id = $seeker_id;
+                    $application->job_id = $job_id;
+                    $application->save();
+                    return Redirect::route('application.show', $application->id);
+                }else
+                {
+                    //Show validation errors
+                    return Redirect::route('application.create')->withErrors($v)->withInput();
+                }
+            }
+        }else
+        {
+            return Redirect::route('seeker.create')->with('message', 'Please create an Account or Sign in first before applying for a Job');
         }
-        return Redirect::route('job.index');
     }
 
 
