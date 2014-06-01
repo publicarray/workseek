@@ -8,38 +8,8 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/cosmo/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300">
-    <style>
-        body{
-            margin-top: 54px;
-        }
-/*        .splash {
-          height: 30em;
-          padding-top: 14em;
-          margin-bottom: 2em;
-          background-image: url("../images/splash.jpg");
-          background-size: cover;
-          color: #fff;
-          text-align: center;
-      }*/
-
-      h1, h2, h3, h4, .btn{
-          font-family:"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-          font-weight: 300;
-      }
-
-      p {
-          margin-bottom: 2em;
-          line-height: 1.6em;
-      }
-      aside{
-        background: #f5f5f5;
-        padding: 10px;
-    }
-
-    footer{
-      margin-top: 4em;
-  }
-</style>
+    {{ HTML::style('assets/css/style.css') }}
+    @yield('head')
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -79,12 +49,12 @@
             </div>
             @if (Auth::check() && Auth::user()->role == 'seeker')
             <div class="col-sm-12">
-                {{link_to_route('seeker.show', 'View Profile')}}
+                {{link_to_route('seeker.show', 'View Profile', array(Auth::user()->id))}}
             </div>
             @endif
             @if (Auth::check() && Auth::user()->role == 'employer')
             <div class="col-sm-12">
-                {{link_to_route('employer.show', 'View Profile')}}
+                {{link_to_route('employer.show', 'View Profile', array(Auth::user()->id))}}
             </div>
             <div class="col-sm-12">
                 {{ link_to_route('job.create', 'Advertise a Job', null, array('class'=>'btn btn-primary btn-block')) }}
@@ -142,8 +112,9 @@
             </div>
         </div>
     </footer>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js" defer></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" defer></script>
+    @yield('script')
 </body>
 
 </html>

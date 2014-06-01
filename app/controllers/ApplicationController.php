@@ -83,7 +83,7 @@ class ApplicationController extends \BaseController {
     {
         $application = Application::find($id)->first();
         $seeker = Application::find($id)->seeker()->first();
-        $user = user::find($seeker['user_id'])->first();
+        $user = User::find($seeker['user_id'])->first();
         // print_r($user.'');
         return View::make('application.show', compact('application', 'user'));
     }

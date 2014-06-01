@@ -10,9 +10,18 @@ class Job extends Eloquent {
     }
 
     public static $rules = array(
-        'title' => 'required|alpha_num',
+        'title' => 'required',
         'salary' => 'required|numeric',
+        'city' => 'required',
         'description' => 'required',
         'enddate' => 'required|date',
     );
+
+    function getDate() {
+        return array(
+            'created_at',
+            'updated_at',
+            'endate',
+        );
+    }
 }

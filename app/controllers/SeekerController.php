@@ -89,6 +89,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+        $id = Auth::user()->id;
         $seeker = Seeker::whereUser_id($id)->first();
 		return View::make('seeker.edit', compact('seeker'));
 	}
@@ -102,6 +103,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function update($id)
 	{
+        $id = Auth::user()->id;
 		$input = Input::all();
         $v = Validator::make($input, Seeker::$rules);
         if ($v->passes())
@@ -138,6 +140,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+        $id = Auth::user()->id;
 		$seeker_id = Seeker::whereUser_id($id)->get(array('id'));
         Auth::logout();
         Application::whereSeeker_id($seeker_id)->delete();

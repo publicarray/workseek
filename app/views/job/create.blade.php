@@ -2,13 +2,17 @@
 
 @section('title')Create Job @stop
 
+@section('head')
+{{ HTML::style('assets/css/datepicker.css') }}
+@stop
+
 @section('body')
 
-<ul>
+<p class="bg-warning" style="color:#fff;">
     @foreach($errors->all() as $error)
-        <li>{{ $error }}</li>
+        {{ $error }}<br />
     @endforeach
-</ul>
+</p>
 
 {{ Form::open(array('route' => 'job.store', 'method' => 'POST', 'class'=>'form-horizontal')) }}
     <div class="form-group">
@@ -38,7 +42,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">End Job Offer Date</label>
         <div class="col-sm-9">
-        <input type="date" class="form-control" name="enddate">
+            {{ Form::text('enddate', null, array('class' => 'datepicker form-control', 'placeholder' => 'DD/MM/YYYY','data-date-format' => 'dd/mm/yyyy')) }}
         </div>
     </div>
 
@@ -48,5 +52,17 @@
         </div>
     </div>
 {{ Form::close() }}
+@stop
 
+@section('script')
+{{ HTML::script('assets/js/bootstrap-datepicker.js') }}
+<script type="text/javascript">
+$('.datepicker').datepicker({
+    format: "dd/mm/yyyy",
+    weekStart: 1,
+    // startDate: "today",
+    todayBtn: "linked",
+    todayHighlight: true
+});
+</script>
 @stop

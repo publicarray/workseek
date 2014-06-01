@@ -94,6 +94,8 @@ class JobController extends \BaseController {
 	public function show($id)
 	{
 		$job = Job::find($id);
+        $enddate = new DateTime($job['enddate']);
+        $job['enddate'] = $enddate->format('d/m/Y');
 		return View::make('job.show', compact('job'));
 	}
 
@@ -112,6 +114,8 @@ class JobController extends \BaseController {
 
             if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
                 $job = Job::whereId($id)->first();
+                $enddate = new DateTime($job['enddate']);
+                $job['enddate'] = $enddate->format('d/m/Y');
                 return View::make('job.edit', compact('job'));
             }else{
                 return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges to edit this Job');
@@ -131,29 +135,35 @@ class JobController extends \BaseController {
 	public function update($id)
 	{
         $input = Input::all();
-        $v = Validator::make($input, Job::$rules);
-        if ($v->passes())
-        {
-            $user_id = Auth::user()->id;
-            $employer_id = Employer::whereUser_id($user_id)->get(array('id'))[0]['id'];
-            if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
+        $user_id = Auth::user()->id;
+        $employer_id = Employer::whereUser_id($user_id)->get(array('id'))[0]['id'];
+
+        if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
+            $v = Validator::make($input, Job::$rules);
+            if ($v->passes())
+            {
+                $date = new DateTime($input['enddate']);
+
         		$input = Input::all();
         		$job = Job::find($id);
         		$job->title = $input['title'];
                 $job->salary = $input['salary'];
                 $job->city = $input['city'];
                 $job->description = $input['description'];
+                $job->enddate = $date->format('Y-m-d H:i:s');
                 $job->employer_id = $employer_id;
                 $job->save();
 
-            return Redirect::route('job.show', $job->id);
+                return Redirect::route('job.show', $job->id);
 
             }else{
-                return "you did not create this job";
+                // Show validation errors
+                return Redirect::to("job/{$id}/edit")->withErrors($v)->withInput();
+                // return Redirect::route("job.edit")->withErrors($v)->withInput();
             }
+
         }else{
-            //Show validation errors
-            return Redirect::route('job.edit')->withErrors($v)->withInput();
+            return "you did not create this job";
         }
     }
 

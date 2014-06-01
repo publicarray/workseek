@@ -90,6 +90,8 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+        // $id = htmlspecialchars($id);
+        $id = Auth::user()->id;
         if(Auth::check() && Auth::user()->role == 'employer'){
             // $user = User::with("employer")->find($id);
             $id = htmlspecialchars($id);
@@ -117,6 +119,7 @@ class EmployerController extends \BaseController {
 	 */
 	public function update($id)
 	{
+        $id = Auth::user()->id;
 		$input = Input::all();
         $v = Validator::make($input, Employer::$rules);
         if ($v->passes())
@@ -158,8 +161,8 @@ class EmployerController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
+        $id = Auth::user()->id;
         if(Auth::check() && Auth::user()->role == 'employer'){
-            $id = Auth::user()->id;
             $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
             Auth::logout();
             Job::whereEmployer_id($employer_id)->delete();
