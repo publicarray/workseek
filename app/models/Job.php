@@ -1,12 +1,17 @@
 <?php
 
 class Job extends Eloquent {
-    function Employer() {
+    public function Employer() {
         return $this->belongsTo('Employer');
     }
     public function Applications()
     {
         return $this->hasMany('Applications');
+    }
+
+    public function Seekers()
+    {
+        return $this->belongsToMany('Seekers', 'applications');
     }
 
     public static $rules = array(
@@ -20,7 +25,7 @@ class Job extends Eloquent {
 
     public static $items_per_page = 10;
 
-    function getDate() {
+    public function getDate() {
         return array(
             'created_at',
             'updated_at',

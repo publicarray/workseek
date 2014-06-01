@@ -1,10 +1,10 @@
 <?php
 
 class Application extends Eloquent {
-    function Seeker() {
+    public function Seeker() {
         return $this->belongsTo('Seeker');
     }
-    function Job() {
+    public function Job() {
         return $this->belongsTo('Job');
     }
     public static $rules = array(

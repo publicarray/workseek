@@ -1,7 +1,7 @@
 <?php
 
 class Seeker extends Eloquent {
-    function User() {
+    public function User() {
         return $this->belongsTo('User');
     }
     public function Applications()

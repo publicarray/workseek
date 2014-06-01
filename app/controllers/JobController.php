@@ -9,16 +9,22 @@ class JobController extends \BaseController {
 	 */
 	public function index()
 	{
+        $dates = getDate();
+        $date = new DateTime;
+        // $date = $date->format('Y-m-d h:i:s');
 
         if (Input::has('query'))
         {
             $query = Input::get('query');
-            $jobs = Includes::search($query)->paginate(Job::$items_per_page)->appends(array('query' => $query));
+
+            $jobs = Includes::search($query);
+            // $jobs = Job::whereId($id)->whereEmployer_id($employer_id)
+            $jobs = $jobs->paginate(Job::$items_per_page)->appends(array('query' => $query));
 
             return View::make('job.index', compact('jobs', 'query'));
         }else{
 
-            $jobs = Job::orderBy('created_at', 'desc')->take(Job::$items_per_page/2)->get();
+            $jobs = Job::orderBy('created_at', 'desc')->where('end_date', '>=', $date)->take(Job::$items_per_page/2)->get();
     		$p = 1;// p is set = no pagination in view
             return View::make('job.index', compact('jobs', 'p'));
         }
