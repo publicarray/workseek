@@ -37,15 +37,16 @@ class EmployerController extends \BaseController {
 
         if ($v->passes())
         {
-            $password = $input['password'];
+            $password = Hash::make($input['password']);
+            $username=  $input['username'];
             $role = 'employer';
 
             $user = new User;
             $user->name = $input['name'];
             $user->email = $input['email'];
             $user->phone = $input['phone'];
-            $user->username = $input['username'];
-            $user->password = Hash::make($password);
+            $user->username = $username;
+            $user->password = $password;
             $user->role = $role;
             $user->remember_token = "default";
             $user->image = $input['image'];
@@ -56,9 +57,10 @@ class EmployerController extends \BaseController {
             $employer->description = $input['description'];
             $employer->user_id = $user->id;
             $employer->save();
+            Auth::attempt(compact('username', 'password'));
             return Redirect::route('employer.show', $user->id);
         }else{
-            //Show validation errors
+            // Show validation errors
             return Redirect::route('employer.create')->withErrors($v)->withInput();
         }
 	}
@@ -90,11 +92,11 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-        // $id = htmlspecialchars($id);
-        $id = Auth::user()->id;
+
         if(Auth::check() && Auth::user()->role == 'employer'){
+            // $id = htmlspecialchars($id);
+            $id = Auth::user()->id;
             // $user = User::with("employer")->find($id);
-            $id = htmlspecialchars($id);
             $user = DB::select("select * from employers, users WHERE users.id = $id AND users.id = employers.user_id")[0];
             // $employer = User::find($id)->employer()->get();
 
@@ -121,7 +123,7 @@ class EmployerController extends \BaseController {
 	{
         $id = Auth::user()->id;
 		$input = Input::all();
-        $v = Validator::make($input, Employer::$rules);
+        $v = Validator::make($input, Employer::$edit_Rules);
         if ($v->passes())
         {
             $user = User::find($id);

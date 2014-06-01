@@ -4,7 +4,7 @@
 
 @section('body')
     <div class="col-xs-12">
-        <img src="{{ asset($user->image->url()) }}">
+        <img class="img-responsive" src="{{ asset($user->image->url('medium')) }}">
         <h2>{{{ $user->name }}}</h2>
     </div>
     <div class="col-xs-6 col-sm-4">

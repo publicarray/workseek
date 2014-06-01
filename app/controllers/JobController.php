@@ -9,17 +9,18 @@ class JobController extends \BaseController {
 	 */
 	public function index()
 	{
-        $items_per_page = 10;
 
         if (Input::has('query'))
         {
             $query = Input::get('query');
-            $jobs = Includes::search($query)->paginate($items_per_page);
+            $jobs = Includes::search($query)->paginate(Job::$items_per_page)->appends(array('query' => $query));
+
             return View::make('job.index', compact('jobs', 'query'));
         }else{
 
-            $jobs = Job::paginate($items_per_page);
-    		return View::make('job.index', compact('jobs'));
+            $jobs = Job::orderBy('created_at', 'desc')->take(Job::$items_per_page/2)->get();
+    		$p = 1;// p is set = no pagination in view
+            return View::make('job.index', compact('jobs', 'p'));
         }
 	}
 
@@ -59,14 +60,16 @@ class JobController extends \BaseController {
                     $id = Auth::user()->id;
                     // $employer_id = User::find($id)->employer()->get(array('id')); // same thing
                     $employer_id = Employer::where('user_id', '=', $id)->get(array('id'))[0]['id'];
-                    $date = new DateTime($input['enddate']);
+                    $start_date = new DateTime($input['start_date']);
+                    $end_date = new DateTime($input['end_date']);
 
                     $job = new Job;
                     $job->title = $input['title'];
                     $job->salary = $input['salary'];
                     $job->city = $input['city'];
                     $job->description = $input['description'];
-                    $job->enddate = $date->format('Y-m-d H:i:s');
+                    $job->start_date = $start_date->format('Y-m-d H:i:s');
+                    $job->end_date = $end_date->format('Y-m-d H:i:s');
                     $job->employer_id = $employer_id;
     //                 $job->employer()->associate($job); // same thing
                     $job->save();
@@ -94,9 +97,14 @@ class JobController extends \BaseController {
 	public function show($id)
 	{
 		$job = Job::find($id);
-        $enddate = new DateTime($job['enddate']);
-        $job['enddate'] = $enddate->format('d/m/Y');
-		return View::make('job.show', compact('job'));
+
+        $date = new DateTime;
+        $end_date = new DateTime($job['end_date']);
+
+        $job_duration = $end_date->diff($date);
+        $job_duration = "$job_duration->y Years, $job_duration->m Months, $job_duration->d Days, $job_duration->h Hours, $job_duration->i Minutes, $job_duration->s Seconds";
+
+		return View::make('job.show', compact('job', 'job_duration'));
 	}
 
 
@@ -114,8 +122,10 @@ class JobController extends \BaseController {
 
             if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
                 $job = Job::whereId($id)->first();
-                $enddate = new DateTime($job['enddate']);
-                $job['enddate'] = $enddate->format('d/m/Y');
+                $start_date = new DateTime($job['start_date']);
+                $end_date = new DateTime($job['end_date']);
+                $job['start_date'] = $start_date->format('d-m-Y');
+                $job['end_date'] = $end_date->format('d-m-Y');
                 return View::make('job.edit', compact('job'));
             }else{
                 return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges to edit this Job');
@@ -142,7 +152,12 @@ class JobController extends \BaseController {
             $v = Validator::make($input, Job::$rules);
             if ($v->passes())
             {
-                $date = new DateTime($input['enddate']);
+
+                // $start_date = DateTime::createFromFormat('d/m/Y', $input['start_date']);
+                // $end_date = DateTime::createFromFormat('d/m/Y', $$input['start_date']);
+
+                $start_date = new DateTime($input['start_date']);
+                $end_date = new DateTime($input['end_date']);
 
         		$input = Input::all();
         		$job = Job::find($id);
@@ -150,7 +165,8 @@ class JobController extends \BaseController {
                 $job->salary = $input['salary'];
                 $job->city = $input['city'];
                 $job->description = $input['description'];
-                $job->enddate = $date->format('Y-m-d H:i:s');
+                $job->start_date = $start_date->format('Y-m-d H:i:s');
+                $job->end_date = $end_date->format('Y-m-d H:i:s');
                 $job->employer_id = $employer_id;
                 $job->save();
 
@@ -192,11 +208,10 @@ class JobController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = Auth::user()->id;
             $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
-            $jobs = Job::whereEmployer_id($employer_id)->get();
+            $jobs = Job::whereEmployer_id($employer_id)->paginate(Job::$items_per_page);
             return View::make('job.listjobs', compact('jobs'));
         }else{
-            $jobs = Job::all();
-            return View::make('job.index', compact('jobs'));
+            return Redirect::route('job.index');
         }
     }
 }

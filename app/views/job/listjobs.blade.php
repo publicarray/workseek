@@ -22,6 +22,9 @@ of {{{Auth::user()->name}}}
     {{ Form::close() }}
 </ul>
 @endforeach
+
+{{ $jobs->links() }}
+
 @endif
 
 @stop

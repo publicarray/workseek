@@ -43,7 +43,7 @@
         <aside class="col-sm-4">
             @if (Auth::check())
             <div class="col-sm-12">
-                <img src="{{ asset(Auth::user()->image->url()) }}">
+                <img class="img-responsive" src="{{ asset(Auth::user()->image->url('thumb')) }}">
                 <p class="">Hello {{ Auth::user()->username }}!</p>
                 <p class="">Account Type: {{ Auth::user()->role }}</p>
             </div>

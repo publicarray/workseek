@@ -72,7 +72,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        if(Auth::check() && Auth::user()->role == 'seeker'){
+        if(Auth::check()){
             $id = Auth::user()->id;
             $user = User::whereId($id)->first();
             return View::make('seeker.show', compact('user'));
@@ -89,9 +89,8 @@ class SeekerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-        $id = Auth::user()->id;
-        $seeker = Seeker::whereUser_id($id)->first();
-		return View::make('seeker.edit', compact('seeker'));
+        $user = Auth::user();
+		return View::make('seeker.edit', compact('user'));
 	}
 
 
@@ -105,7 +104,7 @@ class SeekerController extends \BaseController {
 	{
         $id = Auth::user()->id;
 		$input = Input::all();
-        $v = Validator::make($input, Seeker::$rules);
+        $v = Validator::make($input, Seeker::$edit_Rules);
         if ($v->passes())
         {
             $user = User::find($id);
@@ -127,7 +126,7 @@ class SeekerController extends \BaseController {
 
         }else{
             //Show validation errors
-            return Redirect::route('seeker.update')->withErrors($v)->withInput();
+            return Redirect::route('seeker.edit')->withErrors($v)->withInput();
         }
     }
 

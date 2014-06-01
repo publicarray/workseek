@@ -8,8 +8,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     public function __construct(array $attributes = array()) {
         $this->hasAttachedFile('image', [
             'styles' => [
-                'medium' => '300x300',
-                'thumb' => '100x100'
+                'medium' => '300',
+                'thumb' => '100x100',
                 ]
         ]);
 

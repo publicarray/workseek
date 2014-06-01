@@ -10,7 +10,7 @@
     @endforeach
 </p>
 
-{{ Form::model($seeker, array('route' => array('seeker.update', $seeker->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
+{{ Form::model($user, array('route' => array('seeker.update', $user->id), 'method' => 'PUT', 'class'=>'form-horizontal', 'files' => true)) }}
     <div class="form-group">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">

@@ -40,9 +40,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label">End Job Offer Date</label>
-        <div class="col-sm-9">
-            {{ Form::text('enddate', null, array('class' => 'datepicker form-control', 'placeholder' => 'DD/MM/YYYY','data-date-format' => 'dd/mm/yyyy')) }}
+        <label class="col-sm-3 control-label">Job Offer Period</label>
+        <div class="col-sm-9 input-daterange input-group" id="datepicker">
+            <span class="input-group-addon">from</span>
+            {{ Form::text('start_date', null, array('class' => 'startdatepicker form-control', 'placeholder' => 'DD-MM-YYYY', 'data-date-format' => 'dd-mm-yyyy')) }}
+            <span class="input-group-addon">to</span>
+            {{ Form::text('end_date', null, array('class' => 'startdatepicker form-control', 'placeholder' => 'DD-MM-YYYY', 'data-date-format' => 'dd-mm-yyyy')) }}
         </div>
     </div>
 
@@ -57,8 +60,8 @@
 @section('script')
 {{ HTML::script('assets/js/bootstrap-datepicker.js') }}
 <script type="text/javascript">
-$('.datepicker').datepicker({
-    format: "dd/mm/yyyy",
+$('.input-daterange').datepicker({
+    format: "dd-mm-yyyy",
     weekStart: 1,
     // startDate: "today",
     todayBtn: "linked",

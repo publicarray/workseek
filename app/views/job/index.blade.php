@@ -22,7 +22,9 @@
 </ul>
 @endforeach
 
-{{ $jobs->links() }}
+@if(!isset($p))
+{{$jobs->links()}}
+@endif
 
 @endif
 

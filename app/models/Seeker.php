@@ -9,11 +9,18 @@ class Seeker extends Eloquent {
         return $this->hasMany('Applications');
     }
     public static $rules = array(
-        'name' => 'required|alpha_num',
+        'name' => 'required',
         'email' => 'required|email|unique:users',
         'phone' => 'numeric',
         'username' => 'required|unique:users',
         'password' => 'required|min:6',
+        'image' => 'image',
+    );
+    public static $edit_Rules = array(
+        'name' => 'required',
+        'email' => 'required|email',
+        'phone' => 'numeric',
+        'username' => 'required',
         'image' => 'image',
     );
 }
