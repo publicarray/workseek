@@ -6,10 +6,50 @@
 
 <h2>Sebastian Schmidt, s2894777, Monday 2 June 2014</h2>
 
-<h2>Limitations</h2>
+<h3>Credentials</h3>
+<h4>Seekers</h4>
+<div class="col-xs-6 col-sm-4">
+    <p><i class="glyphicon glyphicon-user"></i> User name:<br />
+    <i class="glyphicon glyphicon-lock"></i> Password:</p>
+</div>
+<div class="col-xs-6 col-sm-8">
+    <p>seeker<br />
+    123456</p>
+</div>
+<div class="col-xs-6 col-sm-4">
+    <p><i class="glyphicon glyphicon-user"></i> User name:<br />
+    <i class="glyphicon glyphicon-lock"></i> Password:</p>
+</div>
+<div class="col-xs-6 col-sm-8">
+    <p>user<br />
+    123456</p>
+</div>
+<h4>Employers</h4>
+<div class="col-xs-6 col-sm-4">
+    <p><i class="glyphicon glyphicon-user"></i> User name:<br />
+    <i class="glyphicon glyphicon-lock"></i> Password:</p>
+</div>
+<div class="col-xs-6 col-sm-8">
+    <p>apple<br />
+    123456</p>
+</div>
+<div class="col-xs-6 col-sm-4">
+    <p><i class="glyphicon glyphicon-user"></i> User name:<br />
+    <i class="glyphicon glyphicon-lock"></i> Password:</p>
+</div>
+<div class="col-xs-6 col-sm-8">
+    <p>coles<br />
+    123456</p>
+</div>
+<h3>Description</h3>
+<p>Any user can create an account from the sidebar on any page. The {{link_to_route('home', 'Home page')}} allows the user to search for jobs in the database. Employers can create an account on the {{link_to_route('employer.index', 'Employers page')}}. One the account is created they can access all of the necessary options in the sidebar.
+</p>
+<h3>Limitations</h3>
 <p>I have implemented the requirements and features to the best of my knowledge. To my understanding there is currently one limitation. When searching the site the industry column cannot be searched no other limitations in using the Application have been found.<p>
-
-<h2>Database</h2>
+<h3>Additions</h3>
+<p>Any user or employer can cancel there account. If an employer chooses to delete their account, all of the linked jobs will also be deleted.
+</p>
+<h3>Database Design</h3>
 
 {{ HTML::image("images/sql.png", "Database schema", array('class' => 'img-responsive center-block')) }}
 
@@ -94,8 +134,8 @@ CREATE INDEX applications_job_id_index on "applications" ("job_id");
 CREATE INDEX seekers_user_id_index on "seekers" ("user_id");
 
 </pre>
-<h2>Additional notes/Credits:</h2>
-<h3>Resources used:</h3>
+<h3>Additional notes/Credits:</h3>
+<h4>Resources used:</h4>
 
 <p>Bootstrap. Retrieved from <a href="http://getbootstrap.com/">http://getbootstrap.com/</a></p>
 
@@ -103,7 +143,7 @@ CREATE INDEX seekers_user_id_index on "seekers" ("user_id");
 
 <p>Datepicker for Bootstrap. Retrieved from <a href="http://www.eyecon.ro/bootstrap-datepicker/">http://www.eyecon.ro/bootstrap-datepicker/</a></p>
 
-<p>jQuery. Retrieved from<a href="http://jquery.com/">http://jquery.com/</a></p>
+<p>jQuery. Retrieved from <a href="http://jquery.com/">http://jquery.com/</a></p>
 
 <!-- syntax highlighting (Pretty Print from Google)-->
     <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=sql&amp;skin=desert" defer></script>

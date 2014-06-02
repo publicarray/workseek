@@ -39,5 +39,14 @@ class UserTableSeeder extends Seeder { public function run()
         $user->role = 'employer';
         $user->password = Hash::make('123456');
         $user->save();
+
+        $user = new User;
+        $user->name = 'Guest';
+        $user->username = 'user';
+        $user->email = 'User@us.com';
+        $user->phone = '98765432';
+        $user->role = 'seeker';
+        $user->password = Hash::make('123456');
+        $user->save();
     }
 }

@@ -9,8 +9,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function index()
 	{
-        $seekers = User::has('seeker')->get();
-        return View::make('seeker.index', compact('seekers'));
+        return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges.');
 	}
 
 
@@ -82,7 +81,7 @@ class SeekerController extends \BaseController {
             return View::make('seeker.show', compact('user'));
         }
         else{
-            return Redirect::route('home')->with('message','Session is Invalid, Please Sign in first!');
+            return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }
 	}
 
@@ -95,9 +94,14 @@ class SeekerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-        $id = htmlspecialchars($id);
-        $user = Auth::user();
-		return View::make('seeker.edit', compact('user'));
+        if(Auth::check() && Auth::user()->role == 'seeker'){
+            $id = htmlspecialchars($id);
+            $user = Auth::user();
+    		return View::make('seeker.edit', compact('user'));
+
+        }else{
+            return Redirect::route('home')->with('message', 'Insufficient Privileges.');
+        }
 	}
 
 
@@ -109,31 +113,35 @@ class SeekerController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $id = Auth::user()->id;
-		$input = Input::all();
-        $v = Validator::make($input, Seeker::$edit_Rules);
-        if ($v->passes())
-        {
-            $user = User::find($id);
 
-            $password = $input['password'];
+        if(Auth::check() && Auth::user()->role == 'seeker'){
+            $id = Auth::user()->id;
+    		$input = Input::all();
+            $v = Validator::make($input, Seeker::$edit_Rules);
+            if ($v->passes())
+            {
+                $user = User::find($id);
+                $password = $input['password'];
 
-            $user->name = htmlspecialchars($input['name']);
-            $user->email = htmlspecialchars($input['email']);
-            $user->phone = htmlspecialchars($input['phone']);
-            $user->username = $input['username'];
-            if($password != null){
-                $user->password = Hash::make($password);
+                $user->name = htmlspecialchars($input['name']);
+                $user->email = htmlspecialchars($input['email']);
+                $user->phone = htmlspecialchars($input['phone']);
+                $user->username = $input['username'];
+                if($password != null){
+                    $user->password = Hash::make($password);
+                }
+                $user->remember_token = "default";
+                $user->image = $input['image'];
+                $user->save();
+
+                return Redirect::route('seeker.show', $user->id);
+
+            }else{
+                //Show validation errors
+                return Redirect::route('seeker.edit')->withErrors($v)->withInput();
             }
-            $user->remember_token = "default";
-            $user->image = $input['image'];
-            $user->save();
-
-            return Redirect::route('seeker.show', $user->id);
-
-        }else{
-            //Show validation errors
-            return Redirect::route('seeker.edit')->withErrors($v)->withInput();
+        else{
+            return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }
     }
 

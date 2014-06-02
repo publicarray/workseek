@@ -9,8 +9,7 @@ class EmployerController extends \BaseController {
 	 */
 	public function index()
 	{
-        $employers = User::has('employer')->get();
-        return View::make('employer.index', compact('employers'));
+        return Redirect::route('employer.create');
 	}
 
 
@@ -92,7 +91,6 @@ class EmployerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = Auth::user()->id;
             $user = DB::select("select * from employers, users WHERE users.id = $id AND users.id = employers.user_id")[0];
@@ -112,36 +110,40 @@ class EmployerController extends \BaseController {
 	 */
 	public function update($id)
 	{
-        $id = Auth::user()->id;
-		$input = Input::all();
-        $v = Validator::make($input, Employer::$edit_Rules);
-        if ($v->passes())
-        {
-            $user = User::find($id);
-            $employer = Employer::whereUser_id($id)->first();
+        if(Auth::check() && Auth::user()->role == 'employer'){
+            $id = Auth::user()->id;
+    		$input = Input::all();
+            $v = Validator::make($input, Employer::$edit_Rules);
+            if ($v->passes())
+            {
+                $user = User::find($id);
+                $employer = Employer::whereUser_id($id)->first();
 
-            $password = $input['password'];
+                $password = $input['password'];
 
-            $user->name = htmlspecialchars($input['name']);
-            $user->email = htmlspecialchars($input['email']);
-            $user->phone = htmlspecialchars($input['phone']);
-            $user->username = $input['username'];
-            if($password != null){
-                $user->password = Hash::make($password);
+                $user->name = htmlspecialchars($input['name']);
+                $user->email = htmlspecialchars($input['email']);
+                $user->phone = htmlspecialchars($input['phone']);
+                $user->username = $input['username'];
+                if($password != null){
+                    $user->password = Hash::make($password);
+                }
+                $user->remember_token = "default";
+                $user->image = $input['image'];
+                $user->save();
+
+                $employer->industry = htmlspecialchars($input['industry']);
+                $employer->description = htmlspecialchars($input['description']);
+                $employer->save();
+
+                return Redirect::route('employer.show', $user->id);
+
+            }else{
+                //Show validation errors
+                return Redirect::route('employer.update')->withErrors($v)->withInput();
             }
-            $user->remember_token = "default";
-            $user->image = $input['image'];
-            $user->save();
-
-            $employer->industry = htmlspecialchars($input['industry']);
-            $employer->description = htmlspecialchars($input['description']);
-            $employer->save();
-
-            return Redirect::route('employer.show', $user->id);
-
         }else{
-            //Show validation errors
-            return Redirect::route('employer.update')->withErrors($v)->withInput();
+            return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }
 	}
 
