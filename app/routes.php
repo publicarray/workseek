@@ -29,6 +29,6 @@ Route::get('application/store', array('before' => 'login:seeker', 'as' => 'appli
 Route::resource('application', 'ApplicationController');
 Route::get('application/create/{id}', array('before' => 'login:seeker', 'as' => 'application.create', 'uses' => 'ApplicationController@create'));
 
-Route::get('doc', function() {
+Route::get('docs', function() {
     return View::make('docs');
 });
