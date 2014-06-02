@@ -114,7 +114,8 @@ class SeekerController extends \BaseController {
 	public function update($id)
 	{
 
-        if(Auth::check() && Auth::user()->role == 'seeker'){
+        if(Auth::check() && Auth::user()->role == 'seeker')
+        {
             $id = Auth::user()->id;
     		$input = Input::all();
             $v = Validator::make($input, Seeker::$edit_Rules);
@@ -140,7 +141,7 @@ class SeekerController extends \BaseController {
                 //Show validation errors
                 return Redirect::route('seeker.edit')->withErrors($v)->withInput();
             }
-        else{
+        }else{
             return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }
     }
