@@ -36,13 +36,14 @@ class SeekerController extends \BaseController {
         if ($v->passes())
         {
             $password = $input['password'];
+            $username = $input['username'];
             $role = 'seeker';
 
             $user = new User;
             $user->name = htmlspecialchars($input['name']);
             $user->email = htmlspecialchars($input['email']);
             $user->phone = htmlspecialchars($input['phone']);
-            $user->username = $input['username'];
+            $user->username = $username;
             $user->password = Hash::make($password);
             $user->role = $role;
             $user->remember_token = "default";
@@ -53,7 +54,8 @@ class SeekerController extends \BaseController {
             $seeker->user_id = $user->id;
             $seeker->save();
 
-            return Redirect::route('home')->with('message','Welcome to WorkSeek please Sign in.');
+            Auth::attempt(compact('username', 'password'));
+            return Redirect::route('seeker.show')->with('message','Welcome to WorkSeek');
 
         }else{
             //Show validation errors
