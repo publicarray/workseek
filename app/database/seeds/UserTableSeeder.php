@@ -14,7 +14,7 @@ class UserTableSeeder extends Seeder { public function run()
         $user->save();
 
         $user = new User;
-        $user->name = 'Mr. Employer';
+        $user->name = 'Ms. Employer';
         $user->username = 'employer';
         $user->email = 'employer@woorkseek.com';
         $user->phone = '98765432';

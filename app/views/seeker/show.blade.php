@@ -1,6 +1,9 @@
 @extends('layout')
 
-@section('title')A seeker @stop
+@section('title')
+{{{ $user->username }}}'s
+ Profile
+@stop
 
 @section('body')
 

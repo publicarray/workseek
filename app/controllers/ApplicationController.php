@@ -12,6 +12,8 @@ class ApplicationController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = $_GET['id'];
             $applications = Application::whereJob_id($id)->get();
+            $applications = Application::all();
+            print_r($applications.'');
             $job = Job::find($id);
             return View::make('application.index', compact('applications', 'job'));
 
@@ -82,9 +84,9 @@ class ApplicationController extends \BaseController {
      */
     public function show($id)
     {
-        $application = Application::find($id)->first();
-        $seeker = Application::find($id)->seeker()->first();
-        $user = User::find($seeker['user_id'])->first();
+        $application = Application::find($id);
+        $seeker = $application->seeker()->get(array('id'))[0]['id'];
+        $user = User::find($seeker);
         return View::make('application.show', compact('application', 'user'));
     }
 
