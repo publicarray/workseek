@@ -16,7 +16,7 @@ class CreateSeekerTable extends Migration {
         {
             $table->increments('id');
             $table->integer('application_id')->nullable();
-            $table->integer('user_id');
+            $table->integer('user_id')->index();
             $table->timestamps();
         });
 	}

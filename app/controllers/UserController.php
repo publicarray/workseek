@@ -101,7 +101,7 @@ class UserController extends \BaseController {
                'password' => $password,
                ),
             array(
-               'username' => 'required',
+               'username' => 'required|alpha_dash',
                'password' => 'required',
                )
             );

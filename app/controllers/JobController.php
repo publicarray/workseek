@@ -65,10 +65,10 @@ class JobController extends \BaseController {
                     $end_date = new DateTime($input['end_date']);
 
                     $job = new Job;
-                    $job->title = $input['title'];
-                    $job->salary = $input['salary'];
-                    $job->city = $input['city'];
-                    $job->description = $input['description'];
+                    $job->title = htmlspecialchars($input['title']);
+                    $job->salary = htmlspecialchars($input['salary']);
+                    $job->city = htmlspecialchars($input['city']);
+                    $job->description = htmlspecialchars($input['description']);
                     $job->start_date = $start_date->format('Y-m-d H:i:s');
                     $job->end_date = $end_date->format('Y-m-d H:i:s');
                     $job->employer_id = $employer_id;
@@ -157,10 +157,10 @@ class JobController extends \BaseController {
 
         		$input = Input::all();
         		$job = Job::find($id);
-        		$job->title = $input['title'];
-                $job->salary = $input['salary'];
-                $job->city = $input['city'];
-                $job->description = $input['description'];
+        		$job->title = htmlspecialchars($input['title']);
+                $job->salary = htmlspecialchars($input['salary']);
+                $job->city = htmlspecialchars($input['city']);
+                $job->description = htmlspecialchars($input['description']);
                 $job->start_date = $start_date->format('Y-m-d H:i:s');
                 $job->end_date = $end_date->format('Y-m-d H:i:s');
                 $job->employer_id = $employer_id;

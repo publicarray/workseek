@@ -15,9 +15,9 @@ class CreateApplicationsTable extends Migration {
 		Schema::create('applications', function($table)
         {
             $table->increments('id');
-            $table->text('letter')->index();
-            $table->integer('seeker_id');
-            $table->integer('job_id');
+            $table->text('letter');
+            $table->integer('seeker_id')->index();
+            $table->integer('job_id')->index();
             $table->timestamps();
         });
 	}

@@ -42,9 +42,9 @@ class EmployerController extends \BaseController {
             $role = 'employer';
 
             $user = new User;
-            $user->name = $input['name'];
-            $user->email = $input['email'];
-            $user->phone = $input['phone'];
+            $user->name = htmlspecialchars($input['name']);
+            $user->email = htmlspecialchars($input['email']);
+            $user->phone = htmlspecialchars($input['phone']);
             $user->username = $username;
             $user->password = $password;
             $user->role = $role;
@@ -53,8 +53,8 @@ class EmployerController extends \BaseController {
             $user->save();
 
             $employer = new Employer;
-            $employer->industry = $input['industry'];
-            $employer->description = $input['description'];
+            $employer->industry = htmlspecialchars($input['industry']);
+            $employer->description = htmlspecialchars($input['description']);
             $employer->user_id = $user->id;
             $employer->save();
             Auth::attempt(compact('username', 'password'));
@@ -122,9 +122,9 @@ class EmployerController extends \BaseController {
 
             $password = $input['password'];
 
-            $user->name = $input['name'];
-            $user->email = $input['email'];
-            $user->phone = $input['phone'];
+            $user->name = htmlspecialchars($input['name']);
+            $user->email = htmlspecialchars($input['email']);
+            $user->phone = htmlspecialchars($input['phone']);
             $user->username = $input['username'];
             if($password != null){
                 $user->password = Hash::make($password);
@@ -133,8 +133,8 @@ class EmployerController extends \BaseController {
             $user->image = $input['image'];
             $user->save();
 
-            $employer->industry = $input['industry'];
-            $employer->description = $input['description'];
+            $employer->industry = htmlspecialchars($input['industry']);
+            $employer->description = htmlspecialchars($input['description']);
             $employer->save();
 
             return Redirect::route('employer.show', $user->id);

@@ -28,7 +28,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 @if (Auth::check())
-                    <li><p class="navbar-text">Hello {{ Auth::user()->username }}!</p></li>
+                    <li><p class="navbar-text">Hello {{{ Auth::user()->username }}}!</p></li>
                     <li>{{ link_to_route('user.logout', 'Sign out') }}</li>
                 @else
                     <li>{{link_to_route('employer.create', 'Employers Sign Up', null, array('class'=>''))}}</li>
@@ -46,7 +46,7 @@
                 @if (Auth::check())
                 <div class="col-sm-12">
                     <img class="img-responsive center-block img-thumbnail" src="{{ asset(Auth::user()->image->url('thumb')) }}">
-                    <p class="text-center">{{ Auth::user()->name }}</p>
+                    <p class="text-center">{{{ Auth::user()->name }}}</p>
                     <p>Account Type: {{ Auth::user()->role }}<br />
                 </div>
                 @if (Auth::check() && Auth::user()->role == 'seeker')
@@ -110,7 +110,7 @@
         <div class="container">
             <div class="row">
                 <div style="text-align:left" class="col-sm-4"><p>&copy; Sebastian Schmidt S2894777</p></div>
-                <div style="text-align:center" class="col-xs-4"><p><a href="docs">Documentation</a></p></div>
+                <div style="text-align:center" class="col-xs-4"><p><a href="{{ url('docs') }}">Documentation</a></p></div>
                 <div style="text-align:right" class="col-sm-4"><p>Validation: <a href="http://validator.w3.org/check?uri=referer">validator.w3.org</a></p></div>
             </div>
         </div>

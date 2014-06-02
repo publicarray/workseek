@@ -16,14 +16,19 @@ Route::get('/', array('as'=>'home', 'uses'=> 'JobController@index'));
 Route::post('user/login', array('as' => 'user.login', 'uses' => 'UserController@login'));
 Route::get('user/logout', array('as' => 'user.logout', 'uses' => 'UserController@logout'));
 
-Route::get('application/store', array('before' => 'login:seeker', 'as' => 'application.store', 'uses' => 'ApplicationController@store'));
-
-
 Route::resource('user', 'UserController');
+
 Route::resource('employer', 'EmployerController');
-Route::resource('seeker', 'SeekerController');
-Route::resource('application', 'ApplicationController');
+
 Route::get('job/listjobs', array('before' => 'login:employer', 'as' => 'job.listjobs', 'uses' => 'JobController@listjobs'));
 Route::resource('job', 'JobController');
 
+Route::resource('seeker', 'SeekerController');
+
+Route::get('application/store', array('before' => 'login:seeker', 'as' => 'application.store', 'uses' => 'ApplicationController@store'));
+Route::resource('application', 'ApplicationController');
 Route::get('application/create/{id}', array('before' => 'login:seeker', 'as' => 'application.create', 'uses' => 'ApplicationController@create'));
+
+Route::get('doc', function() {
+    return View::make('docs');
+});

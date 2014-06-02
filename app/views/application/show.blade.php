@@ -12,11 +12,15 @@
 
 <div class="col-xs-6 col-sm-3">
     <p>Name of Applicant:</p>
+    @if(Auth::check() && Auth::user()->role=='employer')
     <p>Applicant Profile</p>
+    @endif
 </div>
 <div class="col-xs-6 col-sm-3">
     <p>{{{ $user->name }}}</p>
+    @if(Auth::check() && Auth::user()->role=='employer')
     <p>{{ link_to_route('seeker.show', 'Detail', array($user->id)) }}</p>
+    @endif
 </div>
 
 <div class="col-xs-12">

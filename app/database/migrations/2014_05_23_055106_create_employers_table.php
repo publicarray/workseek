@@ -16,7 +16,7 @@ class CreateEmployersTable extends Migration {
         {
             $table->increments('id');
             $table->string('industry')->index();
-            $table->text('description')->nullable()->index();
+            $table->text('description')->nullable();
             $table->integer('user_id')->index();
             $table->timestamps();
         });

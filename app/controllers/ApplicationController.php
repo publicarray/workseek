@@ -12,9 +12,9 @@ class ApplicationController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = $_GET['id'];
             $applications = Application::whereJob_id($id)->get();
-            $job=Job::find($id);
-            // $seeker = Application::find($id)->seeker()->first();
+            $job = Job::find($id);
             return View::make('application.index', compact('applications', 'job'));
+
         }else{
             $applications = Application::all();
             return View::make('application.index');

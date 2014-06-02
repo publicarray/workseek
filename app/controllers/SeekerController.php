@@ -40,9 +40,9 @@ class SeekerController extends \BaseController {
             $role = 'seeker';
 
             $user = new User;
-            $user->name = $input['name'];
-            $user->email = $input['email'];
-            $user->phone = $input['phone'];
+            $user->name = htmlspecialchars($input['name']);
+            $user->email = htmlspecialchars($input['email']);
+            $user->phone = htmlspecialchars($input['phone']);
             $user->username = $input['username'];
             $user->password = Hash::make($password);
             $user->role = $role;
@@ -54,7 +54,7 @@ class SeekerController extends \BaseController {
             $seeker->user_id = $user->id;
             $seeker->save();
 
-            return Redirect::route('seeker.show', $user->id);
+            return Redirect::route('home')->with('message','Welcome to WorkSeek please Sign in.');
 
         }else{
             //Show validation errors
@@ -71,6 +71,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function show($id)
 	{
+        $id = htmlspecialchars($id);
         if(Auth::check() && Auth::user()->role == 'seeker'){
             $id = Auth::user()->id;
             $user = User::whereId($id)->first();
@@ -94,6 +95,7 @@ class SeekerController extends \BaseController {
 	 */
 	public function edit($id)
 	{
+        $id = htmlspecialchars($id);
         $user = Auth::user();
 		return View::make('seeker.edit', compact('user'));
 	}
@@ -116,9 +118,9 @@ class SeekerController extends \BaseController {
 
             $password = $input['password'];
 
-            $user->name = $input['name'];
-            $user->email = $input['email'];
-            $user->phone = $input['phone'];
+            $user->name = htmlspecialchars($input['name']);
+            $user->email = htmlspecialchars($input['email']);
+            $user->phone = htmlspecialchars($input['phone']);
             $user->username = $input['username'];
             if($password != null){
                 $user->password = Hash::make($password);

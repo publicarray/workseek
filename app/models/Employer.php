@@ -12,7 +12,7 @@ class Employer extends Eloquent {
         'name' => 'required',
         'email' => 'required|email|unique:users',
         'phone' => 'numeric',
-        'username' => 'required|unique:users',
+        'username' => 'required|alpha_dash|unique:users',
         'password' => 'required|min:6',
         'image' => 'image',
         'industry' => 'required',
