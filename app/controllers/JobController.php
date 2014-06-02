@@ -187,11 +187,9 @@ class JobController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-        $id = Auth::user()->id;
-        $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
-
+        $user_id = Auth::user()->id;
+        $employer_id = Employer::whereUser_id($user_id)->get(array('id'))[0]['id'];
         if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
-            Job::destroy($id);
     		$job = Job::find($id);
             $job->delete();
             return Redirect::route('job.index');
