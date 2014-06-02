@@ -23,7 +23,7 @@ class Job extends Eloquent {
         'end_date' => 'required|date',
     );
 
-    public static $items_per_page = 10;
+    public static $items_per_page = 5;
 
     public function getDate() {
         return array(

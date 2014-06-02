@@ -94,19 +94,10 @@ class EmployerController extends \BaseController {
 	{
 
         if(Auth::check() && Auth::user()->role == 'employer'){
-            // $id = htmlspecialchars($id);
             $id = Auth::user()->id;
-            // $user = User::with("employer")->find($id);
             $user = DB::select("select * from employers, users WHERE users.id = $id AND users.id = employers.user_id")[0];
-            // $employer = User::find($id)->employer()->get();
-
-            // $employer = $user->merge($employer);
-            // $employer = $employer->find($id);
-
-            // printf($user);
-            // var_dump($user);
-
             return View::make('employer.edit', compact('user'));
+
         }else{
             return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }

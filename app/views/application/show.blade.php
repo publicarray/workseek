@@ -1,24 +1,26 @@
 @extends('layout')
 
-@section('title')Application @stop
+@section('title')
+{{{ $user->name }}}'s Application
+@stop
 
 @section('body')
 
-<div class="col-xs-12">
-    <h2>{{{ $application->id }}}</h2>
+<div class="col-xs-12 col-sm-4">
+    <img class="img-responsive"src="{{ asset($user->image->url('medium')) }}">
 </div>
 
-<img src="{{ asset($user->image->url()) }}">
-<div class="col-xs-6 col-sm-4">
+<div class="col-xs-6 col-sm-3">
     <p>Name of Applicant:</p>
     <p>Applicant Profile</p>
 </div>
-<div class="col-xs-6 col-sm-8">
+<div class="col-xs-6 col-sm-3">
     <p>{{{ $user->name }}}</p>
-    <li>{{ link_to_route('seeker.show', 'Detail', array($user->id)) }}</li>
+    <p>{{ link_to_route('seeker.show', 'Detail', array($user->id)) }}</p>
 </div>
 
 <div class="col-xs-12">
+    <h3>Applicant's Letter:</h3>
     <p>{{{ $application->letter }}}</p>
 </div>
 

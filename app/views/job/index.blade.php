@@ -1,6 +1,12 @@
 @extends('layout')
 
-@section('title')All Jobs @stop
+@section('title')
+@if(isset($query))
+Search Results for '{{$query}}'
+@else
+Recently Added Jobs
+@endif
+@stop
 
 @section('body')
 
@@ -15,14 +21,30 @@
     <p class="bg-warning text-center" style="color:#fff;">Sorry we could not find any Jobs with your query '@if(isset($query)){{{$query}}}' @endif.</p>
 @else
 
-@foreach ($jobs as $job)
-<ul>
-    <li>{{{ $job->title }}}</li>
-    <li>{{ link_to_route('job.show', 'Detail', array($job->id)) }}</li>
-</ul>
-@endforeach
+<section>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>City</th>
+                <th>Salary</th>
+                <th>Industry</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach ($jobs as $job)
+                <tr onclick="window.document.location='job/{{$job->id}}';" style="cursor: pointer">
+                <td>{{ link_to_route('job.show', $job->title, array($job->id)) }}</td>
+                <td>{{{ $job->city }}}</td>
+                <td>{{{ $job->salary }}}</td>
+                <td>{{{ $job->employer()->first()->industry }}}</td>
+            </tr>
+        @endforeach
+         </tbody>
+    </table>
+</section>
 
-@if(!isset($p))
+@if(isset($query))
 {{$jobs->links()}}
 @endif
 

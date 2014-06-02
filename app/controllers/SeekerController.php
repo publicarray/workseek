@@ -51,7 +51,6 @@ class SeekerController extends \BaseController {
             $user->save();
 
             $seeker = new Seeker;
-            // $seeker->user()->associate($seeker); // same thing
             $seeker->user_id = $user->id;
             $seeker->save();
 
@@ -72,12 +71,18 @@ class SeekerController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        if(Auth::check()){
+        if(Auth::check() && Auth::user()->role == 'seeker'){
             $id = Auth::user()->id;
             $user = User::whereId($id)->first();
             return View::make('seeker.show', compact('user'));
         }
-        return Redirect::route('home')->with('message','Session is Invalid, Please Sign in first!');
+        elseif(Auth::check() && Auth::user()->role == 'employer'){
+            $user = User::whereId($id)->first();
+            return View::make('seeker.show', compact('user'));
+        }
+        else{
+            return Redirect::route('home')->with('message','Session is Invalid, Please Sign in first!');
+        }
 	}
 
 

@@ -8,6 +8,10 @@ class Seeker extends Eloquent {
     {
         return $this->hasMany('Applications');
     }
+       public function Jobs()
+    {
+        return $this->belongsToMany('Jobs', 'applications');
+    }
     public static $rules = array(
         'name' => 'required',
         'email' => 'required|email|unique:users',

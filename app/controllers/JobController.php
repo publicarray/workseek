@@ -11,22 +11,17 @@ class JobController extends \BaseController {
 	{
         $dates = getDate();
         $date = new DateTime;
-        // $date = $date->format('Y-m-d h:i:s');
 
         if (Input::has('query'))
         {
             $query = Input::get('query');
-
             $jobs = Includes::search($query);
-            // $jobs = Job::whereId($id)->whereEmployer_id($employer_id)
             $jobs = $jobs->paginate(Job::$items_per_page)->appends(array('query' => $query));
-
             return View::make('job.index', compact('jobs', 'query'));
         }else{
 
-            $jobs = Job::orderBy('created_at', 'desc')->where('end_date', '>=', $date)->take(Job::$items_per_page/2)->get();
-    		$p = 1;// p is set = no pagination in view
-            return View::make('job.index', compact('jobs', 'p'));
+            $jobs = Job::orderBy('created_at', 'desc')->where('end_date', '>=', $date)->take(Job::$items_per_page)->get();
+            return View::make('job.index', compact('jobs'));
         }
 	}
 
@@ -64,7 +59,7 @@ class JobController extends \BaseController {
                 if ($v->passes())
                 {
                     $id = Auth::user()->id;
-                    // $employer_id = User::find($id)->employer()->get(array('id')); // same thing
+
                     $employer_id = Employer::where('user_id', '=', $id)->get(array('id'))[0]['id'];
                     $start_date = new DateTime($input['start_date']);
                     $end_date = new DateTime($input['end_date']);
@@ -77,7 +72,6 @@ class JobController extends \BaseController {
                     $job->start_date = $start_date->format('Y-m-d H:i:s');
                     $job->end_date = $end_date->format('Y-m-d H:i:s');
                     $job->employer_id = $employer_id;
-    //                 $job->employer()->associate($job); // same thing
                     $job->save();
 
                     return Redirect::route('job.show', $job->id);
@@ -103,14 +97,14 @@ class JobController extends \BaseController {
 	public function show($id)
 	{
 		$job = Job::find($id);
+        $employer = Employer::whereId($job->employer_id)->first();
 
         $date = new DateTime;
         $end_date = new DateTime($job['end_date']);
 
         $job_duration = $end_date->diff($date);
-        $job_duration = "$job_duration->y Years, $job_duration->m Months, $job_duration->d Days, $job_duration->h Hours, $job_duration->i Minutes, $job_duration->s Seconds";
-
-		return View::make('job.show', compact('job', 'job_duration'));
+        $job_duration = "$job_duration->y Years, $job_duration->m Months, $job_duration->d Days, $job_duration->h Hours";
+		return View::make('job.show', compact('job', 'employer', 'job_duration'));
 	}
 
 
@@ -158,10 +152,6 @@ class JobController extends \BaseController {
             $v = Validator::make($input, Job::$rules);
             if ($v->passes())
             {
-
-                // $start_date = DateTime::createFromFormat('d/m/Y', $input['start_date']);
-                // $end_date = DateTime::createFromFormat('d/m/Y', $$input['start_date']);
-
                 $start_date = new DateTime($input['start_date']);
                 $end_date = new DateTime($input['end_date']);
 
@@ -181,7 +171,6 @@ class JobController extends \BaseController {
             }else{
                 // Show validation errors
                 return Redirect::to("job/{$id}/edit")->withErrors($v)->withInput();
-                // return Redirect::route("job.edit")->withErrors($v)->withInput();
             }
 
         }else{
@@ -198,9 +187,17 @@ class JobController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		$job = Job::find($id);
-        $job->delete();
-        return Redirect::route('job.index');
+        $id = Auth::user()->id;
+        $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
+
+        if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
+            Job::destroy($id);
+    		$job = Job::find($id);
+            $job->delete();
+            return Redirect::route('job.index');
+        }else{
+            return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges to delete this Job.');
+        }
     }
 
 
