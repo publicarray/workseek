@@ -12,6 +12,7 @@ class Includes {
                 ->whereNested(function($q) use($query)
                 {
                     $q->orwhere('jobs.title', 'LIKE', "%$query%");
+                    $q->orWhere('jobs.description', 'LIKE', "%$query%");
                     $q->orWhere('jobs.city', 'LIKE', "%$query%");
                     $q->orWhere('jobs.salary', '>', "$query");
                     $q->orWhere('employers.industry', 'LIKE', "%$query%");
