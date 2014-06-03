@@ -45,7 +45,7 @@
 <p>Any user can create an account after hitting the register button from the sidebar on any page. The {{link_to_route('home', 'Home page')}} allows the user to search for jobs in the database. Employers can create an account on the {{link_to_route('employer.index', 'Employers page')}}. One the account is created they can access all of the necessary options in the sidebar.
 </p>
 <h3>Limitations</h3>
-<p>I have implemented the requirements and features to the best of my knowledge. To my understanding there is currently one limitation. When searching the site the industry column cannot be searched no other limitations in using the Application have been found.<p>
+<p>I have implemented the requirements and features to the best of my knowledge. To my understanding there are currently no limitations in using the website.<p>
 <h3>Additions</h3>
 <p>Any user or employer can cancel there account. If an employer chooses to delete their account, all of the linked jobs will also be deleted.
 </p>
