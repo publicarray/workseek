@@ -33,6 +33,12 @@
         {{ link_to_route('job.edit', 'Edit Job Offer', array($job->id), array('class'=>'btn btn-primary btn-block')) }}
     </div>
     <div class="col-xs-4">
+        {{ Form::open(array('route' => array('application.index'), 'method' => 'get')) }}
+            <input type="hidden" name="id" value="{{{$job->id}}}">
+            <input class="btn btn-primary btn-block" type="submit" value="View Applications">
+        {{ Form::close() }}
+    </div>
+    <div class="col-xs-4">
         {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete')) }}
         <button type="submit" class="btn btn-danger btn-block">Delete Job</button>
         {{ Form::close() }}

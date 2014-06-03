@@ -20,7 +20,7 @@ class JobController extends \BaseController {
             return View::make('job.index', compact('jobs', 'query'));
         }else{
 
-            $jobs = Job::orderBy('created_at', 'desc')->where('end_date', '>=', $date)->take(Job::$items_per_page)->get();
+            $jobs = Job::where('end_date', '>=', $date)->orderBy('created_at', 'desc')->paginate(Job::$items_per_page);
             return View::make('job.index', compact('jobs'));
         }
 	}

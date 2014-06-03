@@ -37,16 +37,18 @@ Recently Added Jobs
                 <td>{{ link_to_route('job.show', $job->title, array($job->id)) }}</td>
                 <td>{{{ $job->city }}}</td>
                 <td>{{{ $job->salary }}}</td>
+                @if(isset($query))
+                <td>{{{ $job->industry }}}</td>
+                @else
                 <td>{{{ $job->employer()->first()->industry }}}</td>
+                @endif
             </tr>
         @endforeach
          </tbody>
     </table>
 </section>
 
-@if(isset($query))
 {{$jobs->links()}}
-@endif
 
 @endif
 

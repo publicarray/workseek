@@ -11,15 +11,12 @@ class ApplicationController extends \BaseController {
     {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = $_GET['id'];
-            $applications = Application::whereJob_id($id)->get();
-            $applications = Application::all();
-            print_r($applications.'');
+            $applications = Application::with('job')->whereJob_id($id)->paginate(5)->appends(array('id' => $id));
             $job = Job::find($id);
             return View::make('application.index', compact('applications', 'job'));
 
         }else{
-            $applications = Application::all();
-            return View::make('application.index');
+            return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges.');
         }
     }
 

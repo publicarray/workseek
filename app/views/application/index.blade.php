@@ -33,6 +33,8 @@ for {{{ $job->title }}}
     </table>
 </section>
 
+{{$applications->links()}}
+
 @endif
 
 @stop

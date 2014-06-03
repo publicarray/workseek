@@ -29,6 +29,8 @@ class UserTableSeeder extends Seeder { public function run()
         $user->phone = '98765432';
         $user->role = 'employer';
         $user->password = Hash::make('123456');
+        $user->image_file_name = 'coles.jpg';
+        $user->image_content_type = 'image/jpeg';
         $user->save();
 
         $user = new User;
@@ -38,6 +40,8 @@ class UserTableSeeder extends Seeder { public function run()
         $user->phone = '98765432';
         $user->role = 'employer';
         $user->password = Hash::make('123456');
+        $user->image_file_name = 'appleLogo.jpg';
+        $user->image_content_type = 'image/jpeg';
         $user->save();
 
         $user = new User;

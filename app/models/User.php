@@ -5,6 +5,12 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
     use Codesleeve\Stapler\Stapler;
+
+    /**
+    * The stapler constrictor -> specifies image dimensions and styles
+    *
+    *
+    */
     public function __construct(array $attributes = array()) {
         $this->hasAttachedFile('image', [
             'styles' => [
