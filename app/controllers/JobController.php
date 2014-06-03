@@ -103,7 +103,7 @@ class JobController extends \BaseController {
         $end_date = new DateTime($job['end_date']);
 
         $job_duration = $end_date->diff($date);
-        $job_duration = "$job_duration->y Years, $job_duration->m Months, $job_duration->d Days, $job_duration->h Hours";
+        $job_duration = $job_duration->format("%R %y Years, %m Months, %d Days, %h Hours");
 		return View::make('job.show', compact('job', 'employer', 'job_duration'));
 	}
 

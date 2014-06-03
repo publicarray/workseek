@@ -113,5 +113,16 @@ class JobTableSeeder extends Seeder { public function run()
         $job->description = "As the Department Manager, you will be responsible for motivating and coaching your team members, maximising sales, ensuring safe food handling and hygiene awareness and maintaining the highest customer service standards in the Deli OR Fresh Produce Department. Your retail leadership experience, proven track record of sales and profit achievement, strong communication skills and commitment to top-quality product will be the keys to your success in this role";
         $job->employer_id = 2;
         $job->save();
+
+        $job = new Job;
+        $job->title = 'Expired Job';
+        $job->city = 'Sydney';
+        $job->salary = 4000;
+        $job->start_date = '2013-05-28 00:00:00';
+        $job->end_date = '2013-06-31 00:00:00';
+        $job->created_at = '2013-04-21 00:00:00';
+        $job->description = 'This is an old job';
+        $job->employer_id = 3;
+        $job->save();
     }
 }
