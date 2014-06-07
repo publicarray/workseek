@@ -28,7 +28,12 @@ class ApplicationController extends \BaseController {
      */
     public function create($id)
     {
-        return View::make('application.create', compact('id'));
+        if(Auth::check() && Auth::user()->role == 'seeker')
+        {
+            return View::make('application.create', compact('id'));
+        }else{
+            return Redirect::route('seeker.create')->with('message', 'Please create an Account or Sign in first before applying for a Job');
+        }
     }
 
 
@@ -66,8 +71,7 @@ class ApplicationController extends \BaseController {
                     return Redirect::route('application.create')->withErrors($v)->withInput();
                 }
             }
-        }else
-        {
+        }else{
             return Redirect::route('seeker.create')->with('message', 'Please create an Account or Sign in first before applying for a Job');
         }
     }
@@ -81,10 +85,14 @@ class ApplicationController extends \BaseController {
      */
     public function show($id)
     {
-        $application = Application::find($id);
-        $seeker = $application->seeker()->get(array('id'))[0]['id'];
-        $user = User::find($seeker);
-        return View::make('application.show', compact('application', 'user'));
+        if(Auth::check()){
+            $application = Application::find($id);
+            $seeker = $application->seeker()->get(array('user_id'))[0]['user_id'];
+            $user = User::find($seeker);
+            return View::make('application.show', compact('application', 'user'));
+        }else{
+            return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges.');
+        }
     }
 
 
