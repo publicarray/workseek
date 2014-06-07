@@ -39,9 +39,27 @@
         {{ Form::close() }}
     </div>
     <div class="col-xs-4">
-        {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete')) }}
-        <button type="submit" class="btn btn-danger btn-block">Delete Job</button>
-        {{ Form::close() }}
+        <button type="submit" class="btn btn-danger btn-block" data-toggle="modal" data-target="#{{{$job->id}}}"><span class="glyphicon glyphicon-trash"></span> Delete Job</button>
+        <!-- Modal -->
+        <div class="modal fade" id="{{{$job->id}}}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Delete {{{$job->title}}}?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h2>Are you sure you want to delete '{{{$job->title}}}'?</h2>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" style="font-weight: 500;" class="btn btn-primary pull-right" data-dismiss="modal">Cancel</button>
+                        {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete', 'style' => 'display: inline-block', 'class' => 'pull-left')) }}
+                        <button type="submit" class="btn btn-danger" style="font-weight: 500;"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+                        {{ Form::close() }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endif
 
