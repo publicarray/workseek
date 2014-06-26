@@ -74,14 +74,14 @@
                 <br/>
                 {{ Form::open(array('route' => 'user.login', 'method' => 'POST', 'class'=>'form-horizontal')) }}
                 <!-- <label class="col-md-4 control-label">Username</label> -->
-                <div class="form-group col-md-12 @if ($errors->first('username'))has-error@endif">
+                <div class="form-group col-md-12 @if ($errors->first('username'))has-error @endif">
                     {{ Form::text('username', null, array('class'=>'form-control', 'placeholder'=>'Username')) }}
                     @if ($errors->first('username'))
                     <label class="control-label" for="username">{{ $errors->first('username') }}</label>
                     @endif
                 </div>
                 <!-- <label class="col-md-4 control-label">Password</label> -->
-                <div class="form-group col-md-12 @if ($errors->first('password'))has-error@endif">
+                <div class="form-group col-md-12 @if ($errors->first('password'))has-error @endif">
                     {{ Form::password('password', array('class'=>'form-control', 'placeholder'=>'Password')) }}
                     @if ($errors->first('password'))
                     <label class="control-label" for="password">{{ $errors->first('password') }}</label>
