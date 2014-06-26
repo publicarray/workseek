@@ -10,8 +10,8 @@
         }
     ],
 	"require": {
-		"laravel/framework": "4.1.*",
-        "codesleeve/stapler": "dev-master",
+		"laravel/framework": "4.*",
+        "codesleeve/laravel-stapler": "1.0.*",
         "doctrine/dbal": "2.4.*"
 	},
 	"autoload": {

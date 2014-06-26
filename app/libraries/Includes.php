@@ -18,7 +18,8 @@ class Includes {
                     $q->orWhere('employers.industry', 'LIKE', "%$query%");
                 })
                 ->where('jobs.end_date', '>', $date)
-                ->orderBy('jobs.created_at', 'desc');
+                ->orderBy('jobs.created_at', 'desc')
+                ->remember(10);
             return $jobs;
 
     }

@@ -119,7 +119,7 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
-        'Codesleeve\Stapler\StaplerServiceProvider',
+        'Codesleeve\LaravelStapler\LaravelStaplerServiceProvider',
 
 	),
 
