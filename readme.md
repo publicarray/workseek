@@ -3,7 +3,7 @@ Sebastian Schmidt
 
 [ ![Codeship Status for s2894777/2503ICT-assign2](https://www.codeship.io/projects/e5e9f9a0-c3c5-0131-d11c-1e827f842da7/status?branch=master)](https://www.codeship.io/projects/21849)
 
-This application is a Job Seeking like jobseek.com.au. It was develeped as an assignment for 2503ICT Web Programming in 2014 at Griffith University.
+This application is a Job Seeking. It was develeped as an assignment for 2503ICT Web Programming in 2014 at Griffith University.
 
 If you have any feedback or issue please open an [issue](https://github.com/publicarray/2503ict-assign2/issues).
 
