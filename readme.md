@@ -5,18 +5,18 @@ Sebastian Schmidt
 
 This application is a Job Seeking like jobseek.com.au. It was develeped as an assignment for 2503ICT Web Programming in 2014 at Griffith University.
 
-If you have any feedback or issue please open an issue.
+If you have any feedback or issue please open an [issue](https://github.com/publicarray/2503ict-assign2/issues).
 
-# Installation
+## Installation
 
-  git@github.com:publicarray/2503ict-assign2.git
-  cd 2503ict-assign2
-  composer install --prefer-dist
-  php artisan serve
+    git clone git@github.com:publicarray/2503ict-assign2.git
+    cd 2503ict-assign2
+    composer install --prefer-dist
+    php artisan serve
 
-than open http://localhost:8000/ in a web browser.
+next open `http://localhost:8000` in a web browser.
 
-More information can be found at: http://laravel.com/docs/installation
+More information can be found at: [laravel.com/docs/installation](http://laravel.com/docs/installation)
 
 
 
