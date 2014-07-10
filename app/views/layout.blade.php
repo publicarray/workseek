@@ -71,7 +71,6 @@
                 </div>
                 @else
                 <h2 class="text-center">Log In</h2>
-                <br/>
                 {{ Form::open(array('route' => 'user.login', 'method' => 'POST', 'class'=>'form-horizontal')) }}
                 <!-- <label class="col-md-4 control-label">Username</label> -->
                 <div class="form-group col-md-12 @if ($errors->first('username'))has-error @endif">
@@ -87,7 +86,7 @@
                     <label class="control-label" for="password">{{ $errors->first('password') }}</label>
                     @endif
                 </div>
-                <div class="col-xs-12">
+                <div class="form-group col-md-12">
                     <div class="col-md-12">
                         {{ Form::submit('Sign In', array('class'=>'btn btn-primary btn-block')) }}
                     </div>
