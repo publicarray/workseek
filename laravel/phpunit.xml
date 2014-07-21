@@ -10,6 +10,9 @@
          stopOnFailure="false"
          syntaxCheck="false"
 >
+    <php>
+        <server name='HTTP_HOST' value='http://localhost:8000' />
+    </php>
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory>./app/tests/</directory>
