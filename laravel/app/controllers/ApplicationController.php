@@ -87,9 +87,17 @@ class ApplicationController extends \BaseController {
     {
         if(Auth::check()){
             $application = Application::find($id);
-            $seeker = $application->seeker()->get(array('user_id'))[0]['user_id'];
-            $user = User::find($seeker);
-            return View::make('application.show', compact('application', 'user'));
+            $seeker_id = $application->seeker()->get(array('user_id'))[0]['user_id'];
+            $user = User::find($seeker_id);
+
+            $auth_id = Auth::user()->id;
+            $user_id = Job::find($application->job_id)->employer()->get(array('user_id'))[0]['user_id'];
+
+            if($auth_id == $user->id || $auth_id == $user_id){
+                return View::make('application.show', compact('application', 'user'));
+            }else{
+                return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges.');
+            }
         }else{
             return Redirect::to(URL::previous())->with('message', 'Insufficient Privileges.');
         }

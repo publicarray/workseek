@@ -10,7 +10,7 @@ If you have any feedback or issue please open an [issue](https://github.com/publ
 ## Installation
 
     git clone git@github.com:publicarray/2503ict-assign2.git
-    cd 2503ict-assign2
+    cd 2503ict-assign2/laravel
     composer install --prefer-dist
     php artisan serve
 

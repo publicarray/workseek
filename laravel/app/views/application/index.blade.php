@@ -24,7 +24,7 @@ for {{{ $job->title }}}
         <tbody>
         @foreach ($applications as $application)
                 <tr onclick="window.document.location='application/{{$application->id}}';" style="cursor: pointer">
-                <td>{{ link_to_route('application.show', $application->id, array($job->id)) }}</td>
+                <td>{{ link_to_route('application.show', $application->id, array($application->id)) }}</td>
                 <td>{{{$application->created_at->format('d/m/Y H:i:s')}}}</td>
                 <td>{{ link_to_route('application.show', 'Detail', array($application->id), array('class'=>'btn btn-primary btn-block')) }}</td>
             </tr>

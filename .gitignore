@@ -1,5 +1,5 @@
-/bootstrap/compiled.php
-/vendor
+/laravel/bootstrap/compiled.php
+/laravel/vendor
 composer.phar
 composer.lock
 .env.*.php
