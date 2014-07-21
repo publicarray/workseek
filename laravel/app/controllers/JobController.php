@@ -60,7 +60,7 @@ class JobController extends \BaseController {
                 {
                     $id = Auth::user()->id;
 
-                    $employer_id = Employer::where('user_id', '=', $id)->get(array('id'))[0]['id'];
+                    $employer_id = Employer::where('user_id', '=', $id)->remember(10)->get(array('id'))[0]['id'];
                     $start_date = new DateTime($input['start_date']);
                     $end_date = new DateTime($input['end_date']);
 
@@ -118,7 +118,7 @@ class JobController extends \BaseController {
 	{
         if(Auth::check() && Auth::user()->role == 'employer'){
             $user_id = Auth::user()->id;
-            $employer_id = Employer::whereUser_id($user_id)->get(array('id'))[0]['id'];
+            $employer_id = Employer::whereUser_id($user_id)->remember(10)->get(array('id'))[0]['id'];
 
             if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
                 $job = Job::whereId($id)->first();
@@ -146,7 +146,7 @@ class JobController extends \BaseController {
 	{
         $input = Input::all();
         $user_id = Auth::user()->id;
-        $employer_id = Employer::whereUser_id($user_id)->get(array('id'))[0]['id'];
+        $employer_id = Employer::whereUser_id($user_id)->remember(10)->get(array('id'))[0]['id'];
 
         if(Job::whereId($id)->whereEmployer_id($employer_id)->exists()){
             $v = Validator::make($input, Job::$rules);
@@ -208,8 +208,8 @@ class JobController extends \BaseController {
     {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = Auth::user()->id;
-            $employer_id = Employer::whereUser_id($id)->get(array('id'))[0]['id'];
-            $jobs = Job::whereEmployer_id($employer_id)->paginate(Job::$items_per_page);
+            $employer_id = Employer::whereUser_id($id)->remember(10)->get(array('id'))[0]['id'];
+            $jobs = Job::whereEmployer_id($employer_id)->remember(10)->paginate(Job::$items_per_page);
             return View::make('job.listjobs', compact('jobs'));
         }else{
             return Redirect::route('job.index');

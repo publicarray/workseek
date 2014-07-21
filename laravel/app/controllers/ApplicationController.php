@@ -11,7 +11,7 @@ class ApplicationController extends \BaseController {
     {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = $_GET['id'];
-            $applications = Application::with('job')->whereJob_id($id)->paginate(5)->appends(array('id' => $id));
+            $applications = Application::with('job')->whereJob_id($id)->remember(10)->paginate(5)->appends(array('id' => $id));
             $job = Job::find($id);
             return View::make('application.index', compact('applications', 'job'));
 
@@ -50,7 +50,7 @@ class ApplicationController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'seeker')
         {
             $id = Auth::user()->id;
-            $seeker_id = Seeker::whereUser_id($id)->get(array('id'))[0]['id'];
+            $seeker_id = Seeker::whereUser_id($id)->remember(10)->get(array('id'))[0]['id'];
             if(Application::whereSeeker_id($seeker_id)->whereJob_id($job_id)->exists())
             {
                 return Redirect::route('application.create')->with('message', 'You have already Applied for this Job!')->withInput();
@@ -87,11 +87,11 @@ class ApplicationController extends \BaseController {
     {
         if(Auth::check()){
             $application = Application::find($id);
-            $seeker_id = $application->seeker()->get(array('user_id'))[0]['user_id'];
+            $seeker_id = $application->seeker()->remember(10)->get(array('user_id'))[0]['user_id'];
             $user = User::find($seeker_id);
 
             $auth_id = Auth::user()->id;
-            $user_id = Job::find($application->job_id)->employer()->get(array('user_id'))[0]['user_id'];
+            $user_id = Job::find($application->job_id)->employer()->remember(10)->get(array('user_id'))[0]['user_id'];
 
             if($auth_id == $user->id || $auth_id == $user_id){
                 return View::make('application.show', compact('application', 'user'));

@@ -93,6 +93,7 @@ class EmployerController extends \BaseController {
 	{
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = Auth::user()->id;
+            //combine user and employer tables
             $user = DB::select("select * from employers, users WHERE users.id = $id AND users.id = employers.user_id")[0];
             return View::make('employer.edit', compact('user'));
 
