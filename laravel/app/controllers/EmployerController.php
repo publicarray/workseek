@@ -57,7 +57,7 @@ class EmployerController extends \BaseController {
             $employer->user_id = $user->id;
             $employer->save();
             Auth::attempt(compact('username', 'password'));
-            return Redirect::route('employer.show', $user->id);
+            return Redirect::route('job.index');
         }else{
             // Show validation errors
             return Redirect::route('employer.create')->withErrors($v)->withInput();
@@ -169,6 +169,4 @@ class EmployerController extends \BaseController {
             return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }
 	}
-
-
 }

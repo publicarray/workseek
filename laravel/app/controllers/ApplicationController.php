@@ -138,6 +138,4 @@ class ApplicationController extends \BaseController {
     {
         //
     }
-
-
 }
