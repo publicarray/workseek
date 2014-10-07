@@ -106,7 +106,7 @@ class UserController extends \BaseController {
                )
             );
 
-        if ($validator->passes() && Auth::attempt(compact('username', 'password'))){
+        if ($validator->passes() && Auth::attempt(compact('username', 'password'), true)){
             return Redirect::to(URL::previous());
         }else{
             return Redirect::to(URL::previous())->with('message', 'Invalid username or password.')->withErrors($validator)->withInput();
