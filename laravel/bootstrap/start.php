@@ -26,17 +26,12 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(function(){
 
-    $host = $_SERVER['HTTP_HOST'];
-
-        if($host == '*.com'){
-            return 'production';
-        }
-        elseif($host == 'localhost:8000' || $host == '*.local'){
-            return 'local';
-        }
-        else{
-            return 'production';
-        }
+    if ($_SERVER['HTTP_HOST'] == '*.com') {
+        return 'production';
+    } else {
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        return 'local';
+    }
 });
 
 /*

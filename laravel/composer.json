@@ -10,7 +10,7 @@
         }
     ],
 	"require": {
-		"laravel/framework": "4.*",
+		"laravel/framework": "4.2.*",
         "codesleeve/laravel-stapler": "1.0.*",
         "doctrine/dbal": "2.4.*"
 	},
