@@ -16,7 +16,7 @@
     <p>${{{ $job->salary }}}</p>
     <p>{{{ $job->city }}}</p>
     <p>{{{ $employer->industry }}}</p>
-    <p>{{{ $job_duration }}}</p>
+    <time class="timeago" datetime="{{{ $end_date }}}">{{{ $job_duration }}}</time>
 </div>
 <div class="col-xs-12">
     <p>{{{ $job->description }}}</p>
@@ -63,4 +63,15 @@
     </div>
 @endif
 
+@stop
+
+@section('script')
+{{ HTML::script('assets/js/jquery.timeago.js') }}
+<script>
+$(document).ready(function() {
+    $.timeago.settings.allowPast = false;
+    $.timeago.settings.allowFuture = true;
+    $('time.timeago').timeago();
+});
+</script>
 @stop

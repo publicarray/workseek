@@ -9,7 +9,6 @@ class JobController extends \BaseController {
 	 */
 	public function index()
 	{
-        $dates = getDate();
         $date = new DateTime;
 
         if (Input::has('query'))
@@ -19,7 +18,6 @@ class JobController extends \BaseController {
             $jobs = $jobs->paginate(Job::$items_per_page)->appends(array('query' => $query));
             return View::make('job.index', compact('jobs', 'query'));
         }else{
-
             $jobs = Job::where('end_date', '>=', $date)->orderBy('created_at', 'desc')->remember(10)->paginate(Job::$items_per_page);
             return View::make('job.index', compact('jobs'));
         }
@@ -102,9 +100,16 @@ class JobController extends \BaseController {
         $date = new DateTime;
         $end_date = new DateTime($job['end_date']);
 
-        $job_duration = $end_date->diff($date);
-        $job_duration = $job_duration->format("%R %y Years, %m Months, %d Days, %h Hours");
-		return View::make('job.show', compact('job', 'employer', 'job_duration'));
+        if ($end_date < $date)
+        {
+            $job_duration = 'Expired';
+            $end_date = 'Expired';
+        } else {
+            $job_duration = $end_date->diff($date);
+            $end_date = $end_date->format(DateTime::ISO8601);
+            $job_duration = $job_duration->format("%y Years, %m Months, %d Days, %h Hours");
+        }
+		return View::make('job.show', compact('job', 'employer', 'job_duration', 'end_date'));
 	}
 
 
