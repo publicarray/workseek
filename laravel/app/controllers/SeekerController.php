@@ -74,12 +74,20 @@ class SeekerController extends \BaseController {
 	{
         $id = htmlspecialchars($id);
         if(Auth::check() && Auth::user()->role == 'seeker'){
-            $id = Auth::user()->id;
+            $id = Auth::user()->id; // use id of current user
             $user = User::whereId($id)->remember(10)->first();
+			if ($user === null)
+			{
+				App::abort(404);
+			}
             return View::make('seeker.show', compact('user'));
         }
         elseif(Auth::check() && Auth::user()->role == 'employer'){
             $user = User::whereId($id)->remember(10)->first();
+			if ($user === null)
+			{
+				App::abort(404);
+			}
             return View::make('seeker.show', compact('user'));
         }
         else{

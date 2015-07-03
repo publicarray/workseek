@@ -87,6 +87,10 @@ class ApplicationController extends \BaseController {
     {
         if(Auth::check()){
             $application = Application::find($id);
+            if ($application === null)
+			{
+				App::abort(404);
+			}
             $seeker_id = $application->seeker()->remember(10)->get(array('user_id'))[0]['user_id'];
             $user = User::find($seeker_id);
 

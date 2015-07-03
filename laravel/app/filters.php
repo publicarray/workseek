@@ -1,5 +1,11 @@
 <?php
 
+// Error Handler that handles all "404 Not Found"
+App::missing(function($exception)
+{
+    return Response::view('errors.missing', array('url' => Request::url()), 404);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Application & Route Filters

@@ -95,6 +95,10 @@ class JobController extends \BaseController {
 	public function show($id)
 	{
 		$job = Job::find($id);
+		if ($job === null)
+		{
+			App::abort(404);
+		}
         $employer = Employer::whereId($job->employer_id)->first();
 
         $date = new DateTime;

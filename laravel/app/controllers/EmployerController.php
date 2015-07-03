@@ -76,6 +76,10 @@ class EmployerController extends \BaseController {
         if(Auth::check() && Auth::user()->role == 'employer'){
             $id = Auth::user()->id;
             $user = User::find($id);
+			if ($user === null)
+			{
+				App::abort(404);
+			}
             $employer = User::find($id)->employer()->remember(10)->first();
 
             return View::make('employer.show', compact('employer', 'user'));
