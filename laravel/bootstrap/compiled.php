@@ -363,7 +363,7 @@ class Container implements ArrayAccess
     }
     public function offsetUnset($key)
     {
-        unset($this->bindings[$key], $this->instances[$key]);
+        unset($this->bindings[$key], $this->instances[$key], $this->resolved[$key]);
     }
     public function __get($key)
     {
@@ -423,7 +423,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Application extends Container implements HttpKernelInterface, TerminableInterface, ResponsePreparerInterface
 {
-    const VERSION = '4.2.11';
+    const VERSION = '4.2.17';
     protected $booted = false;
     protected $bootingCallbacks = array();
     protected $bootedCallbacks = array();
@@ -695,7 +695,7 @@ class Application extends Container implements HttpKernelInterface, TerminableIn
             $this->boot();
             return $this->dispatch($request);
         } catch (\Exception $e) {
-            if ($this->runningUnitTests()) {
+            if (!$catch || $this->runningUnitTests()) {
                 throw $e;
             }
             return $this['exception']->handleException($e);
@@ -1138,7 +1138,11 @@ class Request extends SymfonyRequest
         if ($request instanceof static) {
             return $request;
         }
-        return (new static())->duplicate($request->query->all(), $request->request->all(), $request->attributes->all(), $request->cookies->all(), $request->files->all(), $request->server->all());
+        $content = $request->content;
+        $request = (new static())->duplicate($request->query->all(), $request->request->all(), $request->attributes->all(), $request->cookies->all(), $request->files->all(), $request->server->all());
+        $request->content = $content;
+        $request->request = $request->getInputSource();
+        return $request;
     }
     public function session()
     {
@@ -1230,7 +1234,16 @@ class Request
     }
     public static function createFromGlobals()
     {
-        $request = self::createRequestFromFactory($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
+        $server = $_SERVER;
+        if ('cli-server' === php_sapi_name()) {
+            if (array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
+                $server['CONTENT_LENGTH'] = $_SERVER['HTTP_CONTENT_LENGTH'];
+            }
+            if (array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) {
+                $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
+            }
+        }
+        $request = self::createRequestFromFactory($_GET, $_POST, array(), $_COOKIE, $_FILES, $server);
         if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded') && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))) {
             parse_str($request->getContent(), $data);
             $request->request = new ParameterBag($data);
@@ -1342,7 +1355,7 @@ class Request
             $dup->attributes->set('_format', $this->get('_format'));
         }
         if (!$dup->getRequestFormat(null)) {
-            $dup->setRequestFormat($format = $this->getRequestFormat(null));
+            $dup->setRequestFormat($this->getRequestFormat(null));
         }
         return $dup;
     }
@@ -1446,7 +1459,16 @@ class Request
     }
     public function get($key, $default = null, $deep = false)
     {
-        return $this->query->get($key, $this->attributes->get($key, $this->request->get($key, $default, $deep), $deep), $deep);
+        if ($this !== ($result = $this->query->get($key, $this, $deep))) {
+            return $result;
+        }
+        if ($this !== ($result = $this->attributes->get($key, $this, $deep))) {
+            return $result;
+        }
+        if ($this !== ($result = $this->request->get($key, $this, $deep))) {
+            return $result;
+        }
+        return $default;
     }
     public function getSession()
     {
@@ -1467,7 +1489,7 @@ class Request
     public function getClientIps()
     {
         $ip = $this->server->get('REMOTE_ADDR');
-        if (!self::$trustedProxies) {
+        if (!$this->isFromTrustedProxy()) {
             return array($ip);
         }
         if (!self::$trustedHeaders[self::HEADER_CLIENT_IP] || !$this->headers->has(self::$trustedHeaders[self::HEADER_CLIENT_IP])) {
@@ -1477,6 +1499,9 @@ class Request
         $clientIps[] = $ip;
         $ip = $clientIps[0];
         foreach ($clientIps as $key => $clientIp) {
+            if (preg_match('{((?:\\d+\\.){3}\\d+)\\:\\d+}', $clientIp, $match)) {
+                $clientIps[$key] = $clientIp = $match[1];
+            }
             if (IpUtils::checkIp($clientIp, self::$trustedProxies)) {
                 unset($clientIps[$key]);
             }
@@ -1519,7 +1544,7 @@ class Request
     }
     public function getPort()
     {
-        if (self::$trustedProxies) {
+        if ($this->isFromTrustedProxy()) {
             if (self::$trustedHeaders[self::HEADER_CLIENT_PORT] && ($port = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PORT]))) {
                 return $port;
             }
@@ -1595,7 +1620,7 @@ class Request
     }
     public function isSecure()
     {
-        if (self::$trustedProxies && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && ($proto = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PROTO]))) {
+        if ($this->isFromTrustedProxy() && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && ($proto = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PROTO]))) {
             return in_array(strtolower(current(explode(',', $proto))), array('https', 'on', 'ssl', '1'));
         }
         $https = $this->server->get('HTTPS');
@@ -1603,7 +1628,7 @@ class Request
     }
     public function getHost()
     {
-        if (self::$trustedProxies && self::$trustedHeaders[self::HEADER_CLIENT_HOST] && ($host = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_HOST]))) {
+        if ($this->isFromTrustedProxy() && self::$trustedHeaders[self::HEADER_CLIENT_HOST] && ($host = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_HOST]))) {
             $elements = explode(',', $host);
             $host = $elements[count($elements) - 1];
         } elseif (!($host = $this->headers->get('HOST'))) {
@@ -1878,7 +1903,7 @@ class Request
         if ($baseUrl && false !== ($prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl))) {
             return $prefix;
         }
-        if ($baseUrl && false !== ($prefix = $this->getUrlencodedPrefix($requestUri, dirname($baseUrl)))) {
+        if ($baseUrl && false !== ($prefix = $this->getUrlencodedPrefix($requestUri, dirname($baseUrl) . '/'))) {
             return rtrim($prefix, '/');
         }
         $truncatedRequestUri = $requestUri;
@@ -1963,6 +1988,10 @@ class Request
             return $request;
         }
         return new static($query, $request, $attributes, $cookies, $files, $server, $content);
+    }
+    private function isFromTrustedProxy()
+    {
+        return self::$trustedProxies && IpUtils::checkIp($this->server->get('REMOTE_ADDR'), self::$trustedProxies);
     }
 }
 namespace Symfony\Component\HttpFoundation;
@@ -2701,9 +2730,6 @@ namespace Symfony\Component\Debug;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Debug\Exception\OutOfMemoryException;
-if (!defined('ENT_SUBSTITUTE')) {
-    define('ENT_SUBSTITUTE', 8);
-}
 class ExceptionHandler
 {
     private $debug;
@@ -2833,7 +2859,7 @@ class ExceptionHandler
                 }
             } catch (\Exception $e) {
                 if ($this->debug) {
-                    $title = sprintf('Exception thrown when handling an exception (%s: %s)', get_class($exception), $exception->getMessage());
+                    $title = sprintf('Exception thrown when handling an exception (%s: %s)', get_class($e), $e->getMessage());
                 } else {
                     $title = 'Whoops, looks like something went wrong.';
                 }
@@ -2896,7 +2922,7 @@ class ExceptionHandler
     }
     private function decorate($content, $css)
     {
-        return "<!DOCTYPE html>\n<html>\n    <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n        <meta name=\"robots\" content=\"noindex,nofollow\" />\n        <style>\n            /* Copyright (c) 2010, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.com/yui/license.html */\n            html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}\n\n            html { background: #eee; padding: 10px }\n            img { border: 0; }\n            #sf-resetcontent { width:970px; margin:0 auto; }\n            {$css}\n        </style>\n    </head>\n    <body>\n        {$content}\n    </body>\n</html>";
+        return "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\" />\n        <meta name=\"robots\" content=\"noindex,nofollow\" />\n        <style>\n            /* Copyright (c) 2010, Yahoo! Inc. All rights reserved. Code licensed under the BSD License: http://developer.yahoo.com/yui/license.html */\n            html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}\n\n            html { background: #eee; padding: 10px }\n            img { border: 0; }\n            #sf-resetcontent { width:970px; margin:0 auto; }\n            {$css}\n        </style>\n    </head>\n    <body>\n        {$content}\n    </body>\n</html>";
     }
     private function abbrClass($class)
     {
@@ -2905,6 +2931,11 @@ class ExceptionHandler
     }
     private function formatArgs(array $args)
     {
+        if (PHP_VERSION_ID >= 50400) {
+            $flags = ENT_QUOTES | ENT_SUBSTITUTE;
+        } else {
+            $flags = ENT_QUOTES;
+        }
         $result = array();
         foreach ($args as $key => $item) {
             if ('object' === $item[0]) {
@@ -2912,7 +2943,7 @@ class ExceptionHandler
             } elseif ('array' === $item[0]) {
                 $formattedValue = sprintf('<em>array</em>(%s)', is_array($item[1]) ? $this->formatArgs($item[1]) : $item[1]);
             } elseif ('string' === $item[0]) {
-                $formattedValue = sprintf('\'%s\'', htmlspecialchars($item[1], ENT_QUOTES | ENT_SUBSTITUTE, $this->charset));
+                $formattedValue = sprintf('\'%s\'', htmlspecialchars($item[1], $flags, $this->charset));
             } elseif ('null' === $item[0]) {
                 $formattedValue = '<em>null</em>';
             } elseif ('boolean' === $item[0]) {
@@ -2921,7 +2952,7 @@ class ExceptionHandler
                 $formattedValue = '<em>resource</em>';
             } else {
                 $formattedValue = str_replace('
-', '', var_export(htmlspecialchars((string) $item[1], ENT_QUOTES | ENT_SUBSTITUTE, $this->charset), true));
+', '', var_export(htmlspecialchars((string) $item[1], $flags, $this->charset), true));
             }
             $result[] = is_int($key) ? $formattedValue : sprintf('\'%s\' => %s', $key, $formattedValue);
         }
@@ -3318,8 +3349,9 @@ class Arr
         foreach (explode('.', $key) as $segment) {
             $results = array();
             foreach ($array as $value) {
-                $value = (array) $value;
-                $results[] = $value[$segment];
+                if (array_key_exists($segment, $value = (array) $value)) {
+                    $results[] = $value[$segment];
+                }
             }
             $array = array_values($results);
         }
@@ -3376,6 +3408,22 @@ class Arr
             $array = $array[$segment];
         }
         return $array;
+    }
+    public static function has($array, $key)
+    {
+        if (empty($array) || is_null($key)) {
+            return false;
+        }
+        if (array_key_exists($key, $array)) {
+            return true;
+        }
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return false;
+            }
+            $array = $array[$segment];
+        }
+        return true;
     }
     public static function only($array, $keys)
     {
@@ -3439,13 +3487,19 @@ use Illuminate\Support\Traits\MacroableTrait;
 class Str
 {
     use MacroableTrait;
+    protected static $snakeCache = array();
+    protected static $camelCache = array();
+    protected static $studlyCache = array();
     public static function ascii($value)
     {
         return Utf8::toAscii($value);
     }
     public static function camel($value)
     {
-        return lcfirst(static::studly($value));
+        if (isset(static::$camelCache[$value])) {
+            return static::$camelCache[$value];
+        }
+        return static::$camelCache[$value] = lcfirst(static::studly($value));
     }
     public static function contains($haystack, $needles)
     {
@@ -3524,7 +3578,7 @@ class Str
     public static function quickRandom($length = 16)
     {
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+        return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
     }
     public static function upper($value)
     {
@@ -3549,11 +3603,15 @@ class Str
     }
     public static function snake($value, $delimiter = '_')
     {
-        if (ctype_lower($value)) {
-            return $value;
+        $key = $value . $delimiter;
+        if (isset(static::$snakeCache[$key])) {
+            return static::$snakeCache[$key];
         }
-        $replace = '$1' . $delimiter . '$2';
-        return strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
+        if (!ctype_lower($value)) {
+            $replace = '$1' . $delimiter . '$2';
+            $value = strtolower(preg_replace('/(.)([A-Z])/', $replace, $value));
+        }
+        return static::$snakeCache[$key] = $value;
     }
     public static function startsWith($haystack, $needles)
     {
@@ -3566,8 +3624,12 @@ class Str
     }
     public static function studly($value)
     {
+        $key = $value;
+        if (isset(static::$studlyCache[$key])) {
+            return static::$studlyCache[$key];
+        }
         $value = ucwords(str_replace(array('-', '_'), ' ', $value));
-        return str_replace(' ', '', $value);
+        return static::$studlyCache[$key] = str_replace(' ', '', $value);
     }
 }
 namespace Symfony\Component\Debug;
@@ -3621,7 +3683,7 @@ class ErrorHandler
                 if (self::$stackedErrorLevels) {
                     self::$stackedErrors[] = func_get_args();
                 } else {
-                    if (version_compare(PHP_VERSION, '5.4', '<')) {
+                    if (PHP_VERSION_ID < 50400) {
                         $stack = array_map(function ($row) {
                             unset($row['args']);
                             return $row;
@@ -3994,7 +4056,7 @@ class FileLoader implements LoaderInterface
         }
         $file = "{$path}/{$group}.php";
         if ($this->files->exists($file)) {
-            $items = $this->files->getRequire($file);
+            $items = $this->getRequire($file);
         }
         $file = "{$path}/{$environment}/{$group}.php";
         if ($this->files->exists($file)) {
@@ -4004,7 +4066,7 @@ class FileLoader implements LoaderInterface
     }
     protected function mergeEnvironment(array $items, $file)
     {
-        return array_replace_recursive($items, $this->files->getRequire($file));
+        return array_replace_recursive($items, $this->getRequire($file));
     }
     public function exists($group, $namespace = null)
     {
@@ -4154,9 +4216,9 @@ class Filesystem
     {
         require_once $file;
     }
-    public function put($path, $contents)
+    public function put($path, $contents, $lock = false)
     {
-        return file_put_contents($path, $contents);
+        return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
     }
     public function prepend($path, $data)
     {
@@ -4187,6 +4249,10 @@ class Filesystem
     public function copy($path, $target)
     {
         return copy($path, $target);
+    }
+    public function name($path)
+    {
+        return pathinfo($path, PATHINFO_FILENAME);
     }
     public function extension($path)
     {
@@ -4799,6 +4865,9 @@ class Router implements HttpKernelInterface, RouteFiltererInterface
     protected function getGroupResourceName($prefix, $resource, $method)
     {
         $group = str_replace('/', '.', $this->getLastGroupPrefix());
+        if (empty($group)) {
+            return trim("{$prefix}{$resource}.{$method}", '.');
+        }
         return trim("{$prefix}{$group}.{$resource}.{$method}", '.');
     }
     public function getResourceWildcard($value)
@@ -5519,8 +5588,10 @@ class Route
     }
     protected function addFilters($type, $filters)
     {
+        $filters = static::explodeFilters($filters);
         if (isset($this->action[$type])) {
-            $this->action[$type] .= '|' . $filters;
+            $existing = static::explodeFilters($this->action[$type]);
+            $this->action[$type] = array_merge($existing, $filters);
         } else {
             $this->action[$type] = $filters;
         }
@@ -6013,7 +6084,7 @@ class UrlGenerator
     }
     public function isValidUrl($path)
     {
-        if (starts_with($path, array('#', '//', 'mailto:', 'tel:'))) {
+        if (starts_with($path, array('#', '//', 'mailto:', 'tel:', 'http://', 'https://'))) {
             return true;
         }
         return filter_var($path, FILTER_VALIDATE_URL) !== false;
@@ -6469,6 +6540,11 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
         $instance->setConnection($connection);
         return $instance->newQuery();
     }
+    public static function onWriteConnection()
+    {
+        $instance = new static();
+        return $instance->newQuery()->useWritePdo();
+    }
     public static function all($columns = array('*'))
     {
         $instance = new static();
@@ -6476,10 +6552,10 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
     public static function find($id, $columns = array('*'))
     {
-        if (is_array($id) && empty($id)) {
-            return new Collection();
-        }
         $instance = new static();
+        if (is_array($id) && empty($id)) {
+            return $instance->newCollection();
+        }
         return $instance->newQuery()->find($id, $columns);
     }
     public static function findOrNew($id, $columns = array('*'))
@@ -6531,7 +6607,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
     {
         if (is_null($relation)) {
-            list(, $caller) = debug_backtrace(false);
+            list(, $caller) = debug_backtrace(false, 2);
             $relation = $caller['function'];
         }
         if (is_null($foreignKey)) {
@@ -6545,7 +6621,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     public function morphTo($name = null, $type = null, $id = null)
     {
         if (is_null($name)) {
-            list(, $caller) = debug_backtrace(false);
+            list(, $caller) = debug_backtrace(false, 2);
             $name = snake_case($caller['function']);
         }
         list($type, $id) = $this->getMorphs($name, $type, $id);
@@ -6796,7 +6872,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
             $this->touchOwners();
         }
     }
-    protected function performUpdate(Builder $query, array $options)
+    protected function performUpdate(Builder $query, array $options = array())
     {
         $dirty = $this->getDirty();
         if (count($dirty) > 0) {
@@ -6814,7 +6890,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
         }
         return true;
     }
-    protected function performInsert(Builder $query, array $options)
+    protected function performInsert(Builder $query, array $options = array())
     {
         if ($this->fireModelEvent('creating') === false) {
             return false;
@@ -6912,8 +6988,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
     public function newQuery()
     {
-        $builder = $this->newEloquentBuilder($this->newBaseQueryBuilder());
-        $builder->setModel($this)->with($this->with);
+        $builder = $this->newQueryWithoutScopes();
         return $this->applyGlobalScopes($builder);
     }
     public function newQueryWithoutScope($scope)
@@ -6923,7 +6998,8 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     }
     public function newQueryWithoutScopes()
     {
-        return $this->removeGlobalScopes($this->newQuery());
+        $builder = $this->newEloquentBuilder($this->newBaseQueryBuilder());
+        return $builder->setModel($this)->with($this->with);
     }
     public function applyGlobalScopes($builder)
     {
@@ -7034,6 +7110,10 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
     {
         $this->fillable = $fillable;
         return $this;
+    }
+    public function getGuarded()
+    {
+        return $this->guarded;
     }
     public function guard(array $guarded)
     {
@@ -7158,6 +7238,7 @@ abstract class Model implements ArrayAccess, ArrayableInterface, JsonableInterfa
             if (isset($relation) || is_null($value)) {
                 $attributes[$key] = $relation;
             }
+            unset($relation);
         }
         return $attributes;
     }
@@ -8367,7 +8448,7 @@ class Encrypter
     protected $block = 16;
     public function __construct($key)
     {
-        $this->key = $key;
+        $this->key = (string) $key;
     }
     public function encrypt($value)
     {
@@ -8456,7 +8537,7 @@ class Encrypter
     }
     public function setKey($key)
     {
-        $this->key = $key;
+        $this->key = (string) $key;
     }
     public function setCipher($cipher)
     {
@@ -8502,7 +8583,7 @@ class LogServiceProvider extends ServiceProvider
     }
     public function provides()
     {
-        return array('log');
+        return array('log', 'Psr\\Log\\LoggerInterface');
     }
 }
 namespace Illuminate\Log;
@@ -8668,6 +8749,7 @@ class Logger implements LoggerInterface
     public function pushHandler(HandlerInterface $handler)
     {
         array_unshift($this->handlers, $handler);
+        return $this;
     }
     public function popHandler()
     {
@@ -8686,6 +8768,7 @@ class Logger implements LoggerInterface
             throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), ' . var_export($callback, true) . ' given');
         }
         array_unshift($this->processors, $callback);
+        return $this;
     }
     public function popProcessor()
     {
@@ -8703,13 +8786,10 @@ class Logger implements LoggerInterface
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
         }
-        if (!static::$timezone) {
-            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
-        }
-        $record = array('message' => (string) $message, 'context' => $context, 'level' => $level, 'level_name' => static::getLevelName($level), 'channel' => $this->name, 'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone), 'extra' => array());
+        $levelName = static::getLevelName($level);
         $handlerKey = null;
         foreach ($this->handlers as $key => $handler) {
-            if ($handler->isHandling($record)) {
+            if ($handler->isHandling(array('level' => $level))) {
                 $handlerKey = $key;
                 break;
             }
@@ -8717,6 +8797,10 @@ class Logger implements LoggerInterface
         if (null === $handlerKey) {
             return false;
         }
+        if (!static::$timezone) {
+            static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
+        }
+        $record = array('message' => (string) $message, 'context' => $context, 'level' => $level, 'level_name' => $levelName, 'channel' => $this->name, 'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone)->setTimezone(static::$timezone), 'extra' => array());
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
         }
@@ -8787,9 +8871,7 @@ class Logger implements LoggerInterface
     }
     public function log($level, $message, array $context = array())
     {
-        if (is_string($level) && defined(__CLASS__ . '::' . strtoupper($level))) {
-            $level = constant(__CLASS__ . '::' . strtoupper($level));
-        }
+        $level = static::toMonologLevel($level);
         return $this->addRecord($level, $message, $context);
     }
     public function debug($message, array $context = array())
@@ -8839,6 +8921,10 @@ class Logger implements LoggerInterface
     public function emergency($message, array $context = array())
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
+    }
+    public static function setTimezone(\DateTimeZone $tz)
+    {
+        self::$timezone = $tz;
     }
 }
 namespace Psr\Log;
@@ -9907,7 +9993,7 @@ class Response
     public function prepare(Request $request)
     {
         $headers = $this->headers;
-        if ($this->isInformational() || in_array($this->statusCode, array(204, 304))) {
+        if ($this->isInformational() || $this->isEmpty()) {
             $this->setContent(null);
             $headers->remove('Content-Type');
             $headers->remove('Content-Length');
@@ -9974,7 +10060,6 @@ class Response
             fastcgi_finish_request();
         } elseif ('cli' !== PHP_SAPI) {
             static::closeOutputBuffers(0, true);
-            flush();
         }
         return $this;
     }
@@ -10619,13 +10704,13 @@ class Cookie
 }
 namespace Whoops;
 
-use Whoops\Handler\HandlerInterface;
-use Whoops\Handler\Handler;
-use Whoops\Handler\CallbackHandler;
-use Whoops\Exception\Inspector;
-use Whoops\Exception\ErrorException;
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
+use Whoops\Exception\ErrorException;
+use Whoops\Exception\Inspector;
+use Whoops\Handler\CallbackHandler;
+use Whoops\Handler\Handler;
+use Whoops\Handler\HandlerInterface;
 class Run
 {
     const EXCEPTION_HANDLER = 'handleException';
@@ -10750,6 +10835,7 @@ class Run
             $this->writeToOutputNow($output);
         }
         if ($willQuit) {
+            flush();
             die(1);
         }
         return $output;
@@ -10764,13 +10850,15 @@ class Run
                     return true;
                 }
             }
-            $exception = new ErrorException($message, $level, 0, $file, $line);
+            $exception = new ErrorException($message, $level, $level, $file, $line);
             if ($this->canThrowExceptions) {
                 throw $exception;
             } else {
                 $this->handleException($exception);
             }
+            return true;
         }
+        return false;
     }
     public function handleShutdown()
     {
@@ -10796,14 +10884,20 @@ class Run
     }
     private static function isLevelFatal($level)
     {
-        return in_array($level, array(E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING));
+        $errors = E_ERROR;
+        $errors |= E_PARSE;
+        $errors |= E_CORE_ERROR;
+        $errors |= E_CORE_WARNING;
+        $errors |= E_COMPILE_ERROR;
+        $errors |= E_COMPILE_WARNING;
+        return ($level & $errors) > 0;
     }
 }
 namespace Whoops\Handler;
 
+use Exception;
 use Whoops\Exception\Inspector;
 use Whoops\Run;
-use Exception;
 interface HandlerInterface
 {
     public function handle();
@@ -10813,10 +10907,9 @@ interface HandlerInterface
 }
 namespace Whoops\Handler;
 
-use Whoops\Handler\HandlerInterface;
+use Exception;
 use Whoops\Exception\Inspector;
 use Whoops\Run;
-use Exception;
 abstract class Handler implements HandlerInterface
 {
     const DONE = 16;
@@ -10852,7 +10945,6 @@ abstract class Handler implements HandlerInterface
 }
 namespace Whoops\Handler;
 
-use Whoops\Handler\Handler;
 use Whoops\Exception\Formatter;
 class JsonResponseHandler extends Handler
 {
@@ -10958,10 +11050,12 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface
     }
     public function terminate(Request $request, Response $response)
     {
+        $prevKernel = null;
         foreach ($this->middlewares as $kernel) {
-            if ($kernel instanceof TerminableInterface) {
+            if (!$prevKernel instanceof TerminableInterface && $kernel instanceof TerminableInterface) {
                 $kernel->terminate($request, $response);
             }
+            $prevKernel = $kernel;
         }
     }
 }

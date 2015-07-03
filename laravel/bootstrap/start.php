@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(function(){
 
-    if ($_SERVER['HTTP_HOST'] == '*.com') {
+    if (!empty($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] == '*.com') {
         return 'production';
     } else {
         $_SERVER['HTTP_HOST'] = 'localhost';
