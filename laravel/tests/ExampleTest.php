@@ -36,8 +36,5 @@ class ExampleTest extends TestCase
 
         $this->visit('/employer/create')
              -> see('Create Employer Account');
-
-        $this->visit('/404err')
-             -> see('404 Error - Not Found');
     }
 }
