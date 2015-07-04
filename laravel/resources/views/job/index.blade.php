@@ -48,7 +48,7 @@ Recently Added Jobs
     </table>
 </section>
 
-{!! $jobs->render() !!}
+{!! str_replace('/?', '?', $jobs->render()) !!}
 
 @endif
 

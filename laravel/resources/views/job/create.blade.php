@@ -61,6 +61,7 @@
 
 @section('script')
 <script type="text/javascript" src="../../assets/js/jquery.timeago.js"></script>
+<script type="text/javascript" src="../../assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
 $('.input-daterange').datepicker({
     format: "dd-mm-yyyy",

@@ -42,7 +42,7 @@ by {{{Auth::user()->name}}}
     </table>
 </section>
 
-{!! $jobs->render() !!}
+{!! str_replace('/?', '?', $jobs->render()) !!}
 
 @endif
 
