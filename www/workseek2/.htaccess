@@ -15,5 +15,6 @@
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ /www/workseek2/index.php [L]
+    #RewriteRule ^ /www/workseek2/index.php [L]
+    RewriteRule ^ index.php [L]
 </IfModule>
