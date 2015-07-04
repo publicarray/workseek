@@ -68,7 +68,7 @@ class ApplicationController extends \BaseController {
                 }else
                 {
                     //Show validation errors
-                    return Redirect::route('application.create')->withErrors($v)->withInput();
+                    return Redirect::route('application.create', $job_id)->withErrors($v)->withInput();
                 }
             }
         }else{
