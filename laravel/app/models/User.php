@@ -10,7 +10,7 @@ use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Codesleeve\Stapler\ORM\EloquentTrait;
 
 class User extends Eloquent implements AuthenticatableContract, CanResetPasswordContract, StaplerableInterface {
-    use UserTrait, RemindableTrait, EloquentTrait, Authenticatable, CanResetPassword;
+    use EloquentTrait, Authenticatable, CanResetPassword;
 
     /**
     * The stapler constrictor -> specifies image dimensions and styles

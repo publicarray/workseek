@@ -10,53 +10,54 @@
     @endforeach
 </p>
 
-{{ Form::open(array('route' => 'employer.store', 'method' => 'POST', 'class'=>'form-horizontal', 'files' => true)) }}
+<form method="POST" action="../employer" accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
+    {!! csrf_field() !!}
     <div class="form-group">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
-            {{ Form::text('name', null, array('class'=>'form-control','placeholder' =>'Your Name')) }}
+            <input class="form-control" placeholder="Your Name" name="name" type="text">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Email</label>
         <div class="col-sm-9">
-             {{ Form::email('email', null, array('class'=>'form-control', 'placeholder'=>'Email Address')) }}
+             <input class="form-control" placeholder="Email Address" name="email" type="email">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Phone</label>
         <div class="col-sm-9">
-            {{ Form::text('phone', null, array('class'=>'form-control', 'placeholder'=>'Phone Number')) }}
+            <input class="form-control" placeholder="Phone Number" name="phone" type="text">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Username</label>
         <div class="col-sm-9">
-            {{ Form::text('username', null, array('class'=>'form-control', 'placeholder'=>'User Name')) }}
+            <input class="form-control" placeholder="User Name" name="username" type="text">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Password</label>
         <div class="col-sm-9">
-            {{ Form::password('password', array('class'=>'form-control')) }}
+            <input class="form-control" name="password" type="password" value="">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Profile Picture</label>
         <div class="col-sm-9">
-            {{ Form::file('image', null, array('class'=>'form-control')) }}
+            <input name="image" type="file">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Industry</label>
         <div class="col-sm-9">
-            {{ Form::text('industry', null, array('class'=>'form-control', 'placeholder'=>'Company Industry')) }}
+            <input class="form-control" placeholder="Company Industry" name="industry" type="text">
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Description</label>
         <div class="col-sm-9">
-            {{ Form::textarea('description', null, array('class'=>'form-control')) }}
+            <textarea class="form-control" name="description" cols="50" rows="10"></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -64,6 +65,6 @@
             <input class="btn btn-primary btn-block" type="submit" value="Register">
         </div>
     </div>
-{{ Form::close() }}
+</form>
 
 @stop

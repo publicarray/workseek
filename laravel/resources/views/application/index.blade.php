@@ -24,16 +24,16 @@ for {{{ $job->title }}}
         <tbody>
         @foreach ($applications as $application)
                 <tr onclick="window.document.location='application/{{$application->id}}';" style="cursor: pointer">
-                <td>{{ link_to_route('application.show', $application->id, array($application->id)) }}</td>
+                <td><a href="application/{{$application->id}}">{{$application->id}}</a></td>
                 <td>{{{$application->created_at->format('d/m/Y H:i:s')}}}</td>
-                <td>{{ link_to_route('application.show', 'Detail', array($application->id), array('class'=>'btn btn-primary btn-block')) }}</td>
+                <td><a href="application/{{$application->id}}" class="btn btn-primary btn-block">Detail</a></td>
             </tr>
         @endforeach
          </tbody>
     </table>
 </section>
 
-{{$applications->links()}}
+{!! $applications->render() !!}
 
 @endif
 

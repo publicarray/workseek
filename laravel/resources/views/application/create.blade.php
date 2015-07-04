@@ -10,19 +10,20 @@
     @endforeach
 </p>
 
-{{ Form::open(array('route' => 'application.store', 'method' => 'POST', 'class'=>'form-horizontal')) }}
+<form method="POST" action="../../application" accept-charset="UTF-8" class="form-horizontal">
+    {!! csrf_field() !!}
     <div class="form-group">
         <label class="col-sm-2 control-label">Letter</label>
         <div class="col-sm-6">
-            {{ Form::textarea('letter', null, array('class'=>'form-control')) }}
+            <textarea class="form-control" name="letter" cols="50" rows="10"></textarea>
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-6">
-            <input type="hidden" name="id" value="{{{$id}}}">
+            <input type="hidden" name="id" value="{{$id}}">
             <input class="btn btn-primary btn-block" type="submit" value="Apply">
         </div>
     </div>
-{{ Form::close() }}
+</form>
 
 @stop

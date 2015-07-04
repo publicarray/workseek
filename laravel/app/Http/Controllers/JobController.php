@@ -2,6 +2,27 @@
 
 class JobController extends \BaseController {
 
+    // return search of a query in jobs
+    private function search($query)
+    {
+        $date = new DateTime;
+        $query = trim(trim($query, '$'));
+
+        $jobs = DB::table('jobs')
+            ->join('employers', 'jobs.employer_id', '=', 'employers.id')
+            ->whereNested(function($q) use($query)
+            {
+                $q->orwhere('jobs.title', 'LIKE', "%$query%");
+                $q->orWhere('jobs.description', 'LIKE', "%$query%");
+                $q->orWhere('jobs.city', 'LIKE', "%$query%");
+                $q->orWhere('jobs.salary', '>', "$query");
+                $q->orWhere('employers.industry', 'LIKE', "%$query%");
+            })
+            ->where('jobs.end_date', '>', $date)
+            ->orderBy('jobs.created_at', 'desc');
+        return $jobs;
+    }
+
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -14,7 +35,7 @@ class JobController extends \BaseController {
         if (Input::has('query'))
         {
             $query = Input::get('query');
-            $jobs = Includes::search($query);
+            $jobs = $this->search($query);
             $jobs = $jobs->paginate(Job::$items_per_page)->appends(array('query' => $query));
             return View::make('job.index', compact('jobs', 'query'));
         }else{

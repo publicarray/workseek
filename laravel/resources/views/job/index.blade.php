@@ -10,12 +10,12 @@ Recently Added Jobs
 
 @section('body')
 
-{{ Form::open(array('route' => 'job.index', 'method' => 'get', 'class'=>'form')) }}
-<div class="input-group input-group-lg">
-  <input type="search" name="query" class="form-control" placeholder="Search for Industry, Description, Location or a min Salary." @if(isset($query)) value="{{{$query}}}" @endif>
-  <span class="input-group-btn"><input class="btn btn-primary btn-lg" type="submit" value="search"></span>
-</div>
-{{ Form::close()}}
+<form method="GET" action="../job" accept-charset="UTF-8" class="form">
+    <div class="input-group input-group-lg">
+      <input type="search" name="query" class="form-control" placeholder="Search for Industry, Description, Location or a min Salary." @if(isset($query)) value="{{{$query}}}" @endif>
+      <span class="input-group-btn"><input class="btn btn-primary btn-lg" type="submit" value="search"></span>
+    </div>
+</form>
 
 @if (!isset($jobs) || count($jobs) === 0)
     <p class="bg-warning text-center" style="color:#fff;">Sorry we could not find any Jobs with your query '@if(isset($query)){{{$query}}}' @endif.</p>
@@ -34,7 +34,7 @@ Recently Added Jobs
         <tbody>
         @foreach ($jobs as $job)
                 <tr onclick="window.document.location='job/{{$job->id}}';" style="cursor: pointer">
-                <td>{{ link_to_route('job.show', $job->title, array($job->id)) }}</td>
+                <td><a href="job/{{$job->id}}">{{$job->title}}</a></td>
                 <td>{{{ $job->city }}}</td>
                 <td>{{{ $job->salary }}}</td>
                 @if(isset($query))
@@ -48,7 +48,7 @@ Recently Added Jobs
     </table>
 </section>
 
-{{$jobs->links()}}
+{!! $jobs->render() !!}
 
 @endif
 

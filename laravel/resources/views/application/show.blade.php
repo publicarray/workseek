@@ -19,7 +19,7 @@
 <div class="col-xs-6 col-sm-3">
     <p>{{{ $user->name }}}</p>
     @if(Auth::check() && Auth::user()->role=='employer')
-    <p>{{ link_to_route('seeker.show', 'Detail', array($user->id)) }}</p>
+    <p><a href="../seeker/{{$user->id}}">Detail</a></p>
     @endif
 </div>
 

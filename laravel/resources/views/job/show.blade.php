@@ -24,19 +24,19 @@
 
 @if(Auth::check() && Auth::user()->role == 'seeker')
     <div class="col-xs-4">
-        {{ link_to_route('application.create', 'Apply for Job', array($job->id), array('class'=>'btn btn-primary btn-block')) }}
+        <a href="../application/create/{{$job->id}}" class="btn btn-primary btn-block">Apply for Job</a>
     </div>
 @endif
 
 @if(Auth::check() && Auth::user()->role == 'employer')
     <div class="col-xs-4">
-        {{ link_to_route('job.edit', 'Edit Job Offer', array($job->id), array('class'=>'btn btn-primary btn-block')) }}
+        <a href="{{$job->id}}/edit" class="btn btn-primary btn-block">Edit Job Offer</a>
     </div>
     <div class="col-xs-4">
-        {{ Form::open(array('route' => array('application.index'), 'method' => 'get')) }}
-            <input type="hidden" name="id" value="{{{$job->id}}}">
+    <form method="GET" action="../application" accept-charset="UTF-8">
+            <input type="hidden" name="id" value="{{$job->id}}">
             <input class="btn btn-primary btn-block" type="submit" value="View Applications">
-        {{ Form::close() }}
+        </form>
     </div>
     <div class="col-xs-4">
         <button type="submit" class="btn btn-danger btn-block" data-toggle="modal" data-target="#{{{$job->id}}}"><span class="glyphicon glyphicon-trash"></span> Delete Job</button>
@@ -53,9 +53,11 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" style="font-weight: 500;" class="btn btn-primary pull-right" data-dismiss="modal">Cancel</button>
-                        {{ Form::open(array('route' => array('job.destroy', $job->id), 'method' => 'delete', 'style' => 'display: inline-block', 'class' => 'pull-left')) }}
-                        <button type="submit" class="btn btn-danger" style="font-weight: 500;"><span class="glyphicon glyphicon-trash"></span> Delete</button>
-                        {{ Form::close() }}
+                        <form method="POST" action="job/{{$job->id}}" accept-charset="UTF-8" style="display: inline-block" class="pull-left">
+                            <input name="_method" type="hidden" value="DELETE">
+                            {!! csrf_field() !!}
+                            <button type="submit" class="btn btn-danger" style="font-weight: 500;"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -66,7 +68,7 @@
 @stop
 
 @section('script')
-{{ HTML::script('assets/js/jquery.timeago.js') }}
+<script type="text/javascript" src="../../assets/js/jquery.timeago.js"></script>
 <script>
 $(document).ready(function() {
     $.timeago.settings.allowPast = false;

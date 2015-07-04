@@ -26,15 +26,15 @@ by {{{Auth::user()->name}}}
         <tbody>
         @foreach ($jobs as $job)
                 <tr onclick="window.document.location='{{$job->id}}';" style="cursor: pointer">
-                <td>{{ link_to_route('job.show', $job->title, array($job->id)) }}</td>
+                <td><a href="{{$job->id}}">{{$job->title}}</a></td>
                 <td>{{{ $job->city }}}</td>
                 <td>{{{ $job->salary }}}</td>
                 <td>{{{ $job->employer()->first()->industry }}}</td>
                 <td>
-                {{ Form::open(array('route' => 'application.index', 'method' => 'get', 'class'=>'form-horizontal')) }}
-                    <input type="hidden" name="id" value="{{{$job->id}}}">
-                    <input class="btn btn-primary btn-block" type="submit" value="View Applications">
-                {{ Form::close() }}
+                    <form method="GET" action="../application" accept-charset="UTF-8" class="form-horizontal">
+                        <input type="hidden" name="id" value="{{$job->id}}">
+                        <input class="btn btn-primary btn-block" type="submit" value="View Applications">
+                    </form>
                 </td>
             </tr>
         @endforeach
@@ -42,7 +42,7 @@ by {{{Auth::user()->name}}}
     </table>
 </section>
 
-{{ $jobs->links() }}
+{!! $jobs->render() !!}
 
 @endif
 

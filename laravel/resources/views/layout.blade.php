@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang='en'>
-
+{{--*/ $host = Request::root() /*--}}
 <head>
     <title>@yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,14 +9,14 @@
     <meta name="author" content="Sebastian Schmidt">
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/cosmo/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300">
-    {{ HTML::style('assets/css/style.css') }}
+    <link rel="stylesheet" type="text/css" href="{{$host}}/assets/css/style.css">
     @yield('head')
 </head>
 <body>
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-                {{link_to_route('home', 'WorkSeek', null, array('class'=>'navbar-brand'))}}
+                <a href="{{Request::root()}}" class="navbar-brand">WorkSeek</a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -25,14 +25,14 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
-                    <li>{{link_to_route('job.index', 'Jobs', null, array('class'=>''))}}</li>
+                    <li><a href="{{$host}}/job">Jobs</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 @if (Auth::check())
-                    <li><p class="navbar-text">Hello {{{ Auth::user()->username }}}!</p></li>
-                    <li>{{ link_to_route('user.logout', 'Sign out') }}</li>
+                    <li><p class="navbar-text">Hello {{ Auth::user()->username }}!</p></li>
+                    <li><a href="{{$host}}/user/logout">Sign out</a></li>
                 @else
-                    <li>{{link_to_route('employer.create', 'Employers Sign Up', null, array('class'=>''))}}</li>
+                    <li><a href="{{$host}}/employer/create">Employers Sign Up</a></li>
                 @endif
                 </ul>
             </div>
@@ -46,56 +46,52 @@
             <aside class="col-sm-3">
                 @if (Auth::check())
                 <div class="col-sm-12">
-                    <img class="img-responsive center-block img-thumbnail" src="{{ asset(Auth::user()->image->url('thumb')) }}">
+                <!-- TODO -->
+                    {{-- <img class="img-responsive center-block img-thumbnail" src="{{ asset(Auth::user()->image->url('thumb')) }}"> --}}
                     <p class="text-center">{{{ Auth::user()->name }}}</p>
                     <p>Account Type: {{ Auth::user()->role }}<br />
                 </div>
                 @if (Auth::check() && Auth::user()->role == 'seeker')
                 <div class="col-sm-12">
-                    {{link_to_route('seeker.show', 'View Profile', array(Auth::user()->id))}}
+                    <a href="{{$host}}/seeker/{{Auth::user()->id}}" class="btn btn-default btn-block">View Profile</a>
                 </div>
                 @endif
                 @if (Auth::check() && Auth::user()->role == 'employer')
                 <div class="col-sm-12">
-                    {{link_to_route('employer.show', 'View Profile', array(Auth::user()->id), array('class'=>'btn btn-primary btn-block'))}}
+                    <a href="{{$host}}/employer/{{Auth::user()->id}}" class="btn btn-primary btn-block" >View Profile</a>
                 </div>
                 <div class="col-sm-12">
-                    {{ link_to_route('job.create', 'Advertise a Job', null, array('class'=>'btn btn-primary btn-block')) }}
+                    <a href="{{$host}}/job/create" class="btn btn-primary btn-block" >Advertise a Job</a>
                 </div>
                 <div class="col-sm-12">
-                    {{ link_to_route('job.listjobs', 'Your Jobs', null, array('class'=>'btn btn-primary btn-block')) }}
+                    <a href="{{$host}}/job/listjobs" class="btn btn-primary btn-block" >Your Jobs</a>
                 </div>
                 @endif
                 <div class="col-sm-12">
                     <br />
-                    {{link_to_route('user.logout', 'Sign out', null, array('class'=>'btn btn-primary btn-block'))}}
+                    <a href="{{$host}}/user/logout" class="btn btn-primary btn-block">Sign out</a>
                 </div>
                 @else
                 <h2 class="text-center">Log In</h2>
-                {{ Form::open(array('route' => 'user.login', 'method' => 'POST', 'class'=>'form-horizontal')) }}
-                <!-- <label class="col-md-4 control-label">Username</label> -->
-                <div class="form-group col-md-12 @if ($errors->first('username'))has-error @endif">
-                    {{ Form::text('username', null, array('class'=>'form-control', 'placeholder'=>'Username')) }}
-                    @if ($errors->first('username'))
-                    <label class="control-label" for="username">{{ $errors->first('username') }}</label>
-                    @endif
-                </div>
-                <!-- <label class="col-md-4 control-label">Password</label> -->
-                <div class="form-group col-md-12 @if ($errors->first('password'))has-error @endif">
-                    {{ Form::password('password', array('class'=>'form-control', 'placeholder'=>'Password')) }}
-                    @if ($errors->first('password'))
-                    <label class="control-label" for="password">{{ $errors->first('password') }}</label>
-                    @endif
-                </div>
-                <div class="form-group col-md-12">
-                    <div class="col-md-12">
-                        {{ Form::submit('Sign In', array('class'=>'btn btn-primary btn-block')) }}
+                <form method="POST" action="{{$host}}/user/login" accept-charset="UTF-8" class="form-horizontal">
+                    {!! csrf_field() !!}
+                    <!-- <label class="col-md-4 control-label">Username</label> -->
+                    <div class="form-group col-md-12 ">
+                        <input class="form-control" placeholder="Username" name="username" type="text">
                     </div>
-                    <div class="col-md-12">
-                        {{link_to_route('seeker.create', 'or Register', null, array('class'=>'btn btn-default btn-block'))}}
+                    <!-- <label class="col-md-4 control-label">Password</label> -->
+                    <div class="form-group col-md-12 ">
+                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
                     </div>
-                </div>
-                {{ Form::close() }}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-12">
+                            <input class="btn btn-primary btn-block" type="submit" value="Sign In">
+                        </div>
+                        <div class="col-md-12">
+                            <a href="{{$host}}/seeker/create" class="btn btn-default btn-block">or Register</a>
+                        </div>
+                    </div>
+                </form>
                 @endif
             </aside>
             <div class="col-sm-9">
@@ -110,7 +106,7 @@
         <div class="container">
             <div class="row">
                 <div style="text-align:left" class="col-sm-4"><p>&copy; Sebastian Schmidt S2894777</p></div>
-                <div style="text-align:center" class="col-xs-4"><p><a href="{{ url('docs') }}">Documentation</a></p></div>
+                <div style="text-align:center" class="col-xs-4"><p><a href="{{$host}}/docs">Documentation</a></p></div>
                 <div style="text-align:right" class="col-sm-4"><p>Validation: <a href="http://validator.w3.org/check?uri=referer">validator.w3.org</a></p></div>
             </div>
         </div>
