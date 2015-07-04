@@ -32,16 +32,24 @@ class Authenticate
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $type)
     {
-        if ($this->auth->guest()) {
+        if ($this->auth->guest()){// && $request->user()->role != $type) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 401);
             } else {
-                return redirect()->guest('auth/login');
+                return redirect()->guest('/')->with('message', 'Insufficient Privileges.');
             }
         }
 
         return $next($request);
     }
 }
+
+        // Check for Authentication
+        // Route::filter('login', function($route, $request, $type)
+        // {
+            // if (!(Auth::check() && Auth::user()->role == $type)) {
+            //     return Redirect::route('home')->with('message', 'Insufficient Privileges.');
+            // }
+        // });

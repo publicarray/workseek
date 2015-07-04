@@ -20,14 +20,14 @@ Route::resource('user', 'UserController');
 
 Route::resource('employer', 'EmployerController');
 
-Route::get('job/listjobs', array('before' => 'login:employer', 'as' => 'job.listjobs', 'uses' => 'JobController@listjobs'));
+Route::get('job/listjobs', ['middleware' => 'auth:employer', 'uses' => 'JobController@listjobs']);
 Route::resource('job', 'JobController');
 
 Route::resource('seeker', 'SeekerController');
 
-Route::get('application/store', array('before' => 'login:seeker', 'as' => 'application.store', 'uses' => 'ApplicationController@store'));
+Route::get('application/store', ['middleware' => 'auth:seeker', 'uses' => 'ApplicationController@store']);
 Route::resource('application', 'ApplicationController');
-Route::get('application/create/{id}', array('before' => 'login:seeker', 'as' => 'application.create', 'uses' => 'ApplicationController@create'));
+Route::get('application/create/{id}', ['middleware' => 'auth:seeker', 'uses' => 'ApplicationController@create']);
 
 Route::get('docs', function() {
     return View::make('docs');

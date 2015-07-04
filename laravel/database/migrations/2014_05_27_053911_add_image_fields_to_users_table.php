@@ -32,10 +32,10 @@ class AddImageFieldsToUsersTable extends Migration {
 	{
 		Schema::table('users', function(Blueprint $table) {
 
-			// $table->dropColumn("image_file_name");
-			// $table->dropColumn("image_file_size");
-			// $table->dropColumn("image_content_type");
-			// $table->dropColumn("image_updated_at");
+			$table->dropColumn("image_file_name");
+			$table->dropColumn("image_file_size");
+			$table->dropColumn("image_content_type");
+			$table->dropColumn("image_updated_at");
 
 		});
 	}

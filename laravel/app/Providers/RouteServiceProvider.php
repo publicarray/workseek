@@ -25,22 +25,6 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        // TODO
-
-
-        // Error Handler that handles all "404 Not Found"
-        // App::missing(function($exception)
-        // {
-        //     return Response::view('errors.missing', array('url' => Request::url()), 404);
-        // });
-
-        // Check for Authentication
-        Route::filter('login', function($route, $request, $type)
-        {
-            // if (!(Auth::check() && Auth::user()->role == $type)) {
-            //     return Redirect::route('home')->with('message', 'Insufficient Privileges.');
-            // }
-        });
 
         parent::boot($router);
     }
