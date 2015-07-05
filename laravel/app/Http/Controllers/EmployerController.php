@@ -48,7 +48,9 @@ class EmployerController extends \BaseController {
             $user->password = $password;
             $user->role = $role;
             $user->remember_token = "default";
-            $user->image = $input['image'];
+			if (isset($input['image'])) {
+				$user->image = $input['image'];
+			}
             $user->save();
 
             $employer = new Employer;
@@ -134,7 +136,9 @@ class EmployerController extends \BaseController {
                     $user->password = Hash::make($password);
                 }
                 $user->remember_token = "default";
-                $user->image = $input['image'];
+				if (isset($input['image'])) {
+					$user->image = $input['image'];
+				}
                 $user->save();
 
                 $employer->industry = htmlspecialchars($input['industry']);
@@ -168,7 +172,7 @@ class EmployerController extends \BaseController {
             Job::whereEmployer_id($employer_id)->delete();
             User::find($id)->employer()->delete();
             User::find($id)->delete();
-            return Redirect::route('employer.index');
+            return Redirect::route('home')->with('message','Your account was deleted.');
         }else{
             return Redirect::route('home')->with('message', 'Insufficient Privileges.');
         }

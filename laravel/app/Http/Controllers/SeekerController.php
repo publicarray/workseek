@@ -47,7 +47,9 @@ class SeekerController extends \BaseController {
             $user->password = Hash::make($password);
             $user->role = $role;
             $user->remember_token = "default";
-            $user->image = $input['image'];
+			if (isset($input['image'])) {
+				$user->image = $input['image'];
+			}
             $user->save();
 
             $seeker = new Seeker;
@@ -55,7 +57,7 @@ class SeekerController extends \BaseController {
             $seeker->save();
 
             Auth::attempt(compact('username', 'password'));
-            return Redirect::route('seeker.show')->with('message','Welcome to WorkSeek');
+			return Redirect::route('seeker.show', $user->id)->with('message','Welcome to WorkSeek');
 
         }else{
             //Show validation errors
@@ -142,7 +144,9 @@ class SeekerController extends \BaseController {
                     $user->password = Hash::make($password);
                 }
                 $user->remember_token = "default";
-                $user->image = $input['image'];
+				if (isset($input['image'])) {
+					$user->image = $input['image'];
+				}
                 $user->save();
 
                 return Redirect::route('seeker.show', $user->id);
@@ -171,7 +175,7 @@ class SeekerController extends \BaseController {
         Application::whereSeeker_id($seeker_id)->delete();
         User::find($id)->seeker()->delete();
         User::find($id)->delete();
-        return Redirect::route('seeker.index');
+        return Redirect::route('home')->with('message','Your account was deleted.');
 	}
 
 

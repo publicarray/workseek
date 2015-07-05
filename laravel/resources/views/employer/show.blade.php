@@ -43,7 +43,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" style="font-weight: 500;" class="btn btn-primary pull-right" data-dismiss="modal">Cancel</button>
-                        <form method="POST" action="employer/{{$user->id}}" accept-charset="UTF-8" style="display: inline-block" class="pull-left">
+                        <form method="POST" action="{{$user->id}}" accept-charset="UTF-8" style="display: inline-block" class="pull-left">
                             <input name="_method" type="hidden" value="DELETE">
                             {!! csrf_field() !!}
                             <button type="submit" class="btn btn-danger" style="font-weight: 500;"><span class="glyphicon glyphicon-trash"></span> Close Account</button>
