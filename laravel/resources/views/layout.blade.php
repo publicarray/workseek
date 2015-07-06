@@ -46,9 +46,15 @@
             <aside class="col-sm-3">
                 @if (Auth::check())
                 <div class="col-sm-12">
-                <!-- TODO the Auth::user object does not contain 'image' using a place holder image instead -->
-                    <img src="{{$host}}/images/thumb/missing.png" class="img-responsive center-block img-thumbnail" />
+                <!-- The Auth::user object does not contain 'image' using workaround -->
                     {{-- <img class="img-responsive center-block img-thumbnail" src="{{ asset(Auth::user()->image->url('thumb')) }}"> --}}
+                <!-- Start workaround of bug: https://github.com/CodeSleeve/laravel-stapler/issues/79 -->
+                    @if ( strlen(Auth::user()->image_file_name) > 0 )
+                        <img class="img-responsive center-block img-thumbnail" src="{{$host}}/system/User/images/{{ chunk_split( str_pad( Auth::user()->id, 9, '0', STR_PAD_LEFT ), 3, '/' ) }}thumb/{{ Auth::user()->image_file_name }}">
+                    @else
+                        <img src="{{$host}}/images/thumb/missing.png" class="img-responsive center-block img-thumbnail" />
+                    @endif
+                <!-- End workaround -->
                     <p class="text-center">{{{ Auth::user()->name }}}</p>
                     <p>Account Type: {{ Auth::user()->role }}<br />
                 </div>
