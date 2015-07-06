@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="shortcut icon" href="favicon.ico" />
     <meta name="author" content="Sebastian Schmidt">
-    <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/cosmo/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300">
+    <link rel="stylesheet" type="text/css" href="{{$host}}/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
     <link rel="stylesheet" type="text/css" href="{{$host}}/assets/css/style.css">
     @yield('head')
 </head>
@@ -46,7 +46,8 @@
             <aside class="col-sm-3">
                 @if (Auth::check())
                 <div class="col-sm-12">
-                <!-- TODO -->
+                <!-- TODO the Auth::user object does not contain 'image' using a place holder image instead -->
+                    <img src="{{$host}}/images/thumb/missing.png" class="img-responsive center-block img-thumbnail" />
                     {{-- <img class="img-responsive center-block img-thumbnail" src="{{ asset(Auth::user()->image->url('thumb')) }}"> --}}
                     <p class="text-center">{{{ Auth::user()->name }}}</p>
                     <p>Account Type: {{ Auth::user()->role }}<br />
@@ -111,8 +112,8 @@
             </div>
         </div>
     </footer>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" defer></script>
+    <script src="{{$host}}/assets/js/jquery.min.js"></script>
+    <script src="{{$host}}/assets/js/bootstrap.min.js" defer></script>
     @yield('script')
 </body>
 

@@ -3,7 +3,7 @@
 @section('title')Create Job @stop
 
 @section('head')
-<link rel="stylesheet" type="text/css" href="../../assets/css/datepicker.css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap-datepicker.min.css">
 @stop
 
 @section('body')
@@ -61,7 +61,7 @@
 
 @section('script')
 <script type="text/javascript" src="../../assets/js/jquery.timeago.js"></script>
-<script type="text/javascript" src="../../assets/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="../../assets/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
 $('.input-daterange').datepicker({
     format: "dd-mm-yyyy",
