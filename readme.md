@@ -1,7 +1,7 @@
 # Workseek Web App
 Sebastian Schmidt
 
-[![Build Status](https://travis-ci.org/publicarray/2503ict-assign2.svg?branch=master)](https://travis-ci.org/publicarray/2503ict-assign2)
+[![Build Status](https://travis-ci.org/publicarray/2503ict-assign2.svg?branch=Laravel5)](https://travis-ci.org/publicarray/2503ict-assign2)
 
 This application is a Job Seeking Website. It was developed as part of an assignment for 2503ICT Web Programming in 2014 at Griffith University.
 
