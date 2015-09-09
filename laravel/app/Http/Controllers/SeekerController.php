@@ -36,7 +36,7 @@ class SeekerController extends \BaseController {
         if ($v->passes())
         {
             $password = $input['password'];
-            $username = $input['username'];
+            $username = htmlspecialchars($input['username']);
             $role = 'seeker';
 
             $user = new User;
@@ -139,7 +139,7 @@ class SeekerController extends \BaseController {
                 $user->name = htmlspecialchars($input['name']);
                 $user->email = htmlspecialchars($input['email']);
                 $user->phone = htmlspecialchars($input['phone']);
-                $user->username = $input['username'];
+                $user->username = htmlspecialchars($input['username']);
                 if($password != null){
                     $user->password = Hash::make($password);
                 }

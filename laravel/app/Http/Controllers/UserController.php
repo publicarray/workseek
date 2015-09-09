@@ -91,9 +91,23 @@ class UserController extends \BaseController {
 	 */
 	public function login()
 	{
+        // Check for Referrer Header
+        if (!URL::previous()) {
+            $redirectUrl = Redirect::to(URL::previous());
+        } else {
+            $redirectUrl = Redirect::route('home');
+        }
+
+        // Process input
 		$input = Input::all();
-        $username = $input['username'];
-        $password = $input['password'];
+        $username = "";
+        $password = "";
+        if (isset($input['username'])) {
+            $username = htmlspecialchars($input['username']);
+        }
+        if (isset($input['username'])) {
+            $password = $input['password'];
+        }
 
         $validator = Validator::make(
             array(
@@ -106,10 +120,10 @@ class UserController extends \BaseController {
                )
             );
 
-        if ($validator->passes() && Auth::attempt(compact('username', 'password'), true)){
-            return Redirect::to(URL::previous());
-        }else{
-            return Redirect::to(URL::previous())->with('message', 'Invalid username or password.')->withErrors($validator)->withInput();
+        if ($validator->passes() && Auth::attempt(compact('username', 'password'), true)) {
+            return $redirectUrl;
+        } else {
+            return $redirectUrl->with('message', 'Invalid username or password.')->withErrors($validator)->withInput();
         }
     }
 
