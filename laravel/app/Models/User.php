@@ -13,7 +13,7 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
     use EloquentTrait, Authenticatable, CanResetPassword;
 
     /**
-    * The stapler constrictor -> specifies image dimensions and styles
+    * The stapler constructor -> specifies image dimensions and styles
     *
     *
     */

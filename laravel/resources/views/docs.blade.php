@@ -4,6 +4,8 @@
 
 @section('body')
 
+{{--*/ $host = Request::root() /*--}}
+
 <h2>Sebastian Schmidt, s2894777, Monday 2 June 2014</h2>
 
 <h3>Credentials</h3>
@@ -51,7 +53,7 @@
 </p>
 <h3>Database Design</h3>
 
-<img src="../images/sql.png" class="img-responsive center-block" alt="Database schema">
+<img src="images/sql.png" class="img-responsive center-block" alt="Database schema">
 
 <pre class="prettyprint lang-sql">
 
@@ -146,5 +148,5 @@ CREATE INDEX seekers_user_id_index on "seekers" ("user_id");
 <p>jQuery. Retrieved from <a href="http://jquery.com/">http://jquery.com/</a></p>
 
 <!-- syntax highlighting (Pretty Print from Google)-->
-    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=sql&amp;skin=desert" defer></script>
+    <script src="{{$host}}/assets/js/run_prettify.js?lang=sql&skin=desert" defer></script>
 @stop
