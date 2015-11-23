@@ -23,5 +23,7 @@ elixir(function(mix) {
         .copy(bowerDir + 'bootswatch/cosmo/bootstrap.min.css', publicDir + 'css/bootstrap.min.css') // cosmo boostrap theme
         .copy(bowerDir + 'bootswatch/fonts', publicDir + 'fonts')
 
-        .copy(bowerDir + 'timeago/jquery.timeago.js', publicDir + 'js/jquery.timeago.js'); // requires jquery
+        .copy(bowerDir + 'timeago/jquery.timeago.js', publicDir + 'js/jquery.timeago.js') // requires jquery
+
+        .copy(bowerDir + '../run_prettify.js', publicDir + 'js/run_prettify.js');
 });
